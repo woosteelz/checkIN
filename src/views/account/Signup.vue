@@ -7,20 +7,20 @@
       <v-layout align-center row wrap>
         <v-flex xs12>
           <v-card>
-            <v-toolbar flat>
-              <v-toolbar-title>Sign in</v-toolbar-title>
-            </v-toolbar>
+            <v-card-title flat primary-title>
+              {{ currentTitle }}
+            </v-card-title>
 
             <!-- 이메일 입력란 -->
             <v-window v-model="step">
               <v-window-item :value="1">
                 <v-card-text>
-                  <v-text-field v-model="email" label="Please enter your Email" :rules="[rules.email]"></v-text-field>
+                  <v-text-field v-model="email" label="Please enter your Email" :rules="rules.emailRules"/>
                   <span class="caption grey--text text--darken-1">
                     This is the email you will use to login to your Vuetify
                     account
                   </span>
-                  <v-btn block :disabled="[!rules.email]">Send Confirm Code</v-btn>
+                  <v-btn block :disabled="!rules.email">Send Confirm Code</v-btn>
                 </v-card-text>
               </v-window-item>
 
@@ -29,7 +29,7 @@
                 <v-card-text>
                   <v-text-field
                     label="Please enter your Confirm Code"
-                  ></v-text-field>
+                  />
                   <span class="caption grey--text text--darken-1">
                     This is the email you will use to login to your Vuetify
                     account
@@ -41,11 +41,18 @@
               <!-- 패스워드 입력 및 확인란 -->
               <v-window-item :value="3">
                 <v-card-text>
-                  <v-text-field label="Password" type="password"></v-text-field>
                   <v-text-field
+                    v-model="password"
+                    :rules="rules.passwordRules"
+                    label="Password"
+                    type="password"
+                  />
+                  <v-text-field
+                    v-model="confirmPassword"
+                    :rules="rules.checkPasswordRules"
                     label="Confirm Password"
                     type="password"
-                  ></v-text-field>
+                  />
                   <span class="caption grey--text text--darken-1">
                     Please enter a password for your account
                   </span>
@@ -53,7 +60,7 @@
                 <div class="pa-2">
                 <v-checkbox
                   v-model="agreement"
-                  :rules="[rules.required]"
+                  :rules="rules.required"
                   color="deep-purple"
                 >
                   <template v-slot:label>
@@ -79,20 +86,33 @@
                 </div>
               </v-window-item>
             </v-window>
-            <v-divider></v-divider>
+            <v-divider/>
 
-            <v-card-actions>
-              <v-btn :disabled="step === 1" text @click="step--">
-                Back
+            <v-card-actions v-if="step!==4">
+              <v-btn text @click="$router.push({ name: 'Login' })">
+                Close
               </v-btn>
               <v-spacer></v-spacer>
+              <v-btn :disabled="step === 1" text color="#BF360C" @click="step--">
+                Back
+              </v-btn>
               <v-btn
                 :disabled="step === 4"
-                color="#BF360C"
+                color="#66BB6A"
                 depressed
                 @click="step++"
               >
                 Next
+              </v-btn>
+            </v-card-actions>
+            <v-card-actions v-else>
+              <v-btn
+                color="#66BB6A"
+                depressed
+                block
+                @click="$router.push({ name: 'Login' })"
+              >
+                Done
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -104,26 +124,40 @@
 
 <script>
 export default {
-  data: () => ({
-    step: 1,
-    rules: {
-      email: v =>
-        (v || "").match(/@/) ||
-        "올바른 이메일 형식이 아닙니다! 다시 입력해주세요",
-      length: len => v =>
-        (v || "").length >= len || `Invalid character length, required ${len}`,
-      password: v =>
-        (v || "").match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/) ||
-        "Password must contain an upper case letter, a numeric character, and a special character",
-      required: v => !!v || "This field is required"
+  data ()  {
+    return {
+      agentID: '',
+      password: '',
+      confirmPassword: '',
+      step: 1,
+      length: 6,
+      rules: {
+        emailRules: [
+          v => !!v || 'E-mail is required',
+          v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '올바른 이메일 형식이 아닙니다! 다시 입력해주세요',
+        ],
+        passwordRules: [
+          v => !!v || 'Password is required',
+          v => v.length <= this.length || 'Password must be less than 10 characters',
+          v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/.test(v) ||
+          "Password must contain an upper case letter, a numeric character, and a special character"
+        ],
+        checkPasswordRules: [
+          v => !!v || 'Confirm password is required',
+          v => this.password === this.confirmPassword ||'It does not match'
+        ],
+        required: [v => !!v || "This field is required"]
+      }
     }
-  }),
+  },
   computed: {
     currentTitle() {
       switch (this.step) {
         case 1:
-          return "Sign-up";
+          return "Sign-Up";
         case 2:
+          return "Validate a confirm code";
+        case 3:
           return "Create a password";
         default:
           return "Account created";

@@ -8,10 +8,8 @@
             <v-spacer></v-spacer>
           </v-toolbar>
           <div class="pa-3">
-            <v-text-field v-model="email" :rules="[rules.email]" label="Please enter your email">
-            </v-text-field>
-            <v-text-field v-model="password" :rules="[rules.password]" type="password" label="Please enter your password">
-            </v-text-field>
+            <v-text-field v-model="agentID" :rules="rules.emailRules" label="Please enter your email"/>
+            <v-text-field v-model="password" :rules="rules.passwordRules" type="password" label="Please enter your password"/>
             <v-btn @click="login" color="#43A047" block depressed large
               >Check in</v-btn
             >
@@ -25,7 +23,7 @@
                 block
                 depressed
                 large
-                >Sign in</v-btn
+                >Sign Up</v-btn
               >
             </div>
             <div class="my-2">
@@ -50,11 +48,14 @@ import axios from "axios";
 
 export default {
   data: () => ({
-    rules: {
-      email: v => (v || '').match(/@/) || '올바른 이메일 형식이 아닙니다! 다시 입력해주세요',
-      length: len => v => (v || '').length >= len || `Invalid character length, required ${len}`,
-      password: v => (v || '').match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/) || 'Password must contain an upper case letter, a numeric character, and a special character',
-      required: v => !!v || 'This field is required'
+    rules: {        
+      emailRules: [
+          v => !!v || 'E-mail is required',
+          v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '올바른 이메일 형식이 아닙니다! 다시 입력해주세요',
+      ],
+      passwordRules: [
+          v => !!v || 'Password is required',
+      ],
     }
   }),
   methods: {
