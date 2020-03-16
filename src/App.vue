@@ -1,6 +1,5 @@
 <template>
   <v-app>
-
     <!-- 네비게이션 드로어 영역-->
     <v-navigation-drawer v-model="drawer" absolute temporary>
       <v-list nav dense>
@@ -27,17 +26,17 @@
 
     <!-- app 바 영역 -->
     <v-app-bar height="50" color="deep-purple" dark dense>
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="drawer = true"/>
 
       <v-toolbar-title>Title</v-toolbar-title>
     </v-app-bar>
 
     <!-- 컨텐츠 탈부착 영역 -->
     <v-content>
-      <router-view></router-view>
+      <router-view/>
     </v-content>
 
-    <v-footer app> </v-footer>
+    <v-footer app/>
   </v-app>
 </template>
 
