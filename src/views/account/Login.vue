@@ -65,7 +65,7 @@ export default {
           pwd: this.password
         })
         .then(function(response) {
-          if (response.data[0].id === "Hyun Ho") {
+          if (response.data[0].result === true) {
             alert("로그인 성공!");
           } else {
             alert("이메일 및 비밀번호를 확인하세욧!");

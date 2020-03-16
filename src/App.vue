@@ -1,54 +1,50 @@
 <template>
-    <v-app id="inspire">
-      <v-navigation-drawer v-model="drawer" app floating>
-        <v-list dense>
+  <v-app>
+
+    <!-- 네비게이션 드로어 영역-->
+    <v-navigation-drawer v-model="drawer" absolute temporary>
+      <v-list nav dense>
+        <v-list-item-group
+          v-model="group"
+          active-class="deep-purple--text text--accent-4"
+        >
           <v-list-item router :to="{ name: 'Home' }">
-            <v-list-item-action>
+            <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Home</v-list-item-title>
-            </v-list-item-content>
+            </v-list-item-icon>
+            <v-list-item-title>Home</v-list-item-title>
           </v-list-item>
+
           <v-list-item router :to="{ name: 'Login' }">
-            <v-list-item-action>
-              <v-icon>mdi-contact-mail</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>로그인</v-list-item-title>
-            </v-list-item-content>
+            <v-list-item-icon>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Account</v-list-item-title>
           </v-list-item>
-        </v-list>
-      </v-navigation-drawer>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
 
-      <v-app-bar dark app color="#B71C1C">
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-        <v-toolbar-title>Welcome to Check IN</v-toolbar-title>
-        <div class="ma-3">
-          <v-text-field
-            outlined
-            append-icon="mdi-search"
-            label="Search"
-          ></v-text-field>
-        </div>
-      </v-app-bar>
+    <!-- app 바 영역 -->
+    <v-app-bar height="50" color="deep-purple" dark dense>
+      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
 
-      <v-content>
-        <router-view></router-view>
-      </v-content>
-      <v-footer color="#B71C1C" app>
-        <span class="white--text">&copy; 2019</span>
-      </v-footer>
-    </v-app>
+      <v-toolbar-title>Title</v-toolbar-title>
+    </v-app-bar>
+
+    <!-- 컨텐츠 탈부착 영역 -->
+    <v-content>
+      <router-view></router-view>
+    </v-content>
+
+    <v-footer app> </v-footer>
+  </v-app>
 </template>
 
 <script>
 export default {
-  props: {
-    source: String
-  },
   data: () => ({
-    drawer: null
+    drawer: false
   })
 };
 </script>
