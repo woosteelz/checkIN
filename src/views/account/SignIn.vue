@@ -18,7 +18,7 @@
             </div>
             <div class="my-2">
               <v-btn
-                @click="$router.push({ name: 'Signup' })"
+                @click="$router.push({ name: 'SignUp' })"
                 color="gray-lighten-5"
                 block
                 depressed

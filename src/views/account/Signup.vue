@@ -89,7 +89,7 @@
             <v-divider/>
 
             <v-card-actions v-if="step!==4">
-              <v-btn text @click="$router.push({ name: 'Login' })">
+              <v-btn text @click="$router.push({ name: 'SignIn' })">
                 Close
               </v-btn>
               <v-spacer></v-spacer>
@@ -180,7 +180,7 @@ export default {
       axios.post("http://18.218.11.150:8080/checkIN/signUp/signAccount", {agentID, agentPW, name, errorCount, numberOfDevice})
         .then(res => {
           if(res.status === 200) {
-            this.$router.push({ name: 'Login' })
+            this.$router.push({ name: 'SignIn' })
             return true
           }
         })

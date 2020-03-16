@@ -15,7 +15,7 @@
             <v-list-item-title>Home</v-list-item-title>
           </v-list-item>
 
-          <v-list-item router :to="{ name: 'Login' }">
+          <v-list-item router :to="{ name: 'SignIn' }">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
