@@ -7,7 +7,7 @@ import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
 import {ValidationProvider} from 'vee-validate';
 
-Vue.component('validation-provider', ValidationProvider)
+Vue.component('ValidationProvider', ValidationProvider)
 
 Vue.config.productionTip = false
 

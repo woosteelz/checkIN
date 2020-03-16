@@ -15,7 +15,7 @@
             <v-window v-model="step">
               <v-window-item :value="1">
                 <v-card-text>
-                  <v-text-field v-model="email" label="Please enter your Email" :rules="rules.emailRules"/>
+                  <v-text-field v-model="agentID" label="Please enter your Email" :rules="rules.emailRules"/>
                   <span class="caption grey--text text--darken-1">
                     This is the email you will use to login to your Vuetify
                     account
@@ -106,11 +106,12 @@
               </v-btn>
             </v-card-actions>
             <v-card-actions v-else>
+              
               <v-btn
                 color="#66BB6A"
                 depressed
                 block
-                @click="$router.push({ name: 'Login' })"
+                @click="signUp"
               >
                 Done
               </v-btn>
@@ -123,12 +124,14 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data ()  {
     return {
       agentID: '',
       password: '',
       confirmPassword: '',
+      agreement: false,
       step: 1,
       length: 6,
       rules: {
@@ -138,7 +141,7 @@ export default {
         ],
         passwordRules: [
           v => !!v || 'Password is required',
-          v => v.length <= this.length || 'Password must be less than 10 characters',
+          v => v.length >= this.length || 'Password must be less than 6 characters',
           v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/.test(v) ||
           "Password must contain an upper case letter, a numeric character, and a special character"
         ],
@@ -163,6 +166,28 @@ export default {
           return "Account created";
       }
     }
-  }
+  },
+  methods: {
+    signUp() {
+      const agentID = this.agentID
+      const agentPW = this.password
+      const name = '테스트'
+      const errorCount = 0
+      const numberOfDevice = 0
+      if(!agentID || !agentPW || !name) {
+        return false
+      }
+      axios.post("http://18.218.11.150:8080/checkIN/signUp/signAccount", {agentID, agentPW, name, errorCount, numberOfDevice})
+        .then(res => {
+          if(res.status === 200) {
+            this.$router.push({ name: 'Login' })
+            return true
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  },
 };
 </script>

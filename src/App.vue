@@ -44,6 +44,7 @@
 <script>
 export default {
   data: () => ({
+    group: '',
     drawer: false
   })
 };

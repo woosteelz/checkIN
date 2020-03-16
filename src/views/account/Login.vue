@@ -10,7 +10,7 @@
           <div class="pa-3">
             <v-text-field v-model="agentID" :rules="rules.emailRules" label="Please enter your email"/>
             <v-text-field v-model="password" :rules="rules.passwordRules" type="password" label="Please enter your password"/>
-            <v-btn @click="login" color="#43A047" block depressed large
+            <v-btn @click="signIn" color="#43A047" block depressed large
               >Check in</v-btn
             >
             <div class="my-5">
@@ -48,6 +48,8 @@ import axios from "axios";
 
 export default {
   data: () => ({
+    agentID: '',
+    password: '',
     rules: {        
       emailRules: [
           v => !!v || 'E-mail is required',
@@ -59,21 +61,22 @@ export default {
     }
   }),
   methods: {
-    login() {
-      axios
-        .post("http://18.218.11.150:8080/checkIN/send", {
-          id: this.email,
-          pwd: this.password
-        })
-        .then(function(response) {
-          if (response.data[0].result === true) {
+    signIn() {
+      const id = this.agentID
+      const pwd = this.password
+
+      if(!id || !pwd) {
+        alert("이메일 및 비밀번호를 확인하세욧!");
+        return false
+      }
+      axios.post("http://18.218.11.150:8080/checkIN/signIn", {id, pwd})
+        .then((res) => {
+          if (res.data.result === true) {
             alert("로그인 성공!");
-          } else {
-            alert("이메일 및 비밀번호를 확인하세욧!");
           }
         })
-        .catch(function(error) {
-          console.log(error);
+        .catch((err) => {
+          console.log(err);
         });
     }
   }
