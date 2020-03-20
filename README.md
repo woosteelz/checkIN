@@ -24,9 +24,11 @@ yarn build
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
+
+
 # API
 
-### Sign Up
+## Sign Up
 ### POST /signup
 ### Request Data
 ```
@@ -45,7 +47,8 @@ status: 200
     "message": "Success"
 }
 ```
-### Sign In
+## Sign In
+
 ### POST /signin
 ### Request Data
 ```
@@ -64,7 +67,8 @@ status: 201
     "siteInfo": [사이트 등록정보1, 사이트 등록정보2 ... ]
 }
 ```
-### Sign Out
+## Sign Out
+
 ### GET /signout
 ### Request Data
 ```
