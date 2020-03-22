@@ -40,7 +40,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 >        "numberOfDevice": "추가 등록한 모바일 기기, Default=0"
 >    }
 > ```
-
+>
 > ### Response Data
 > #### Successful
 > ```
@@ -61,6 +61,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 >   }
 >   ```
 
+
+
 > ## POST /signin
 > ### Request Data
 >   ```
@@ -70,7 +72,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 >       "agentPW": "회원가입 할 계정에 대한 비밀번호",
 >   }
 >   ```
-
+>
 > ### Response Data
 > #### Successful
 >   ```
@@ -98,6 +100,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 >   }
 >   ```
 
+
+
 > ## GET /signout
 > ### Request Data
 >   ```
@@ -106,7 +110,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 >       "Authorization": "JWT값"
 >   }
 >   ```
-
+>
 >   ### Response Data
 >   #### Successful
 >   ```
