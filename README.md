@@ -28,7 +28,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 # API
 
-## Sign Up  ### POST /signup
+## POST /signup
 ### Request Data
 ```
 body:
@@ -41,16 +41,25 @@ body:
 }
 ```
 ### Response Data
+#### Successful
 ```
 header:
 {
     "status": 200
 }
+```
+#### Unsuccessful
+```
+header:
 {
-    "message": "Success"
+    "status": 400
+}
+body:
+{
+    "error": "error 종류 ex) Missing password"
 }
 ```
-## Sign In  ### POST /signin
+## POST /signin
 ### Request Data
 ```
 body:
@@ -60,6 +69,7 @@ body:
 }
 ```
 ### Response Data
+#### Successful
 ```
 header:
 {
@@ -73,8 +83,20 @@ body:
     "siteInfo": ['사이트 등록정보1', '사이트 등록정보2' ... ]
 }
 ```
-## Sign Out ### GET /signout
+#### Unsuccessful
+```
+header:
+{
+    "status": 400
+}
+body:
+{
+    "error": "error 종류 ex) Missing password"
+}
+```
+## GET /signout
 ### Request Data
+#### Successful
 ```
 header:
 {
@@ -82,9 +104,14 @@ header:
 }
 ```
 ### Response Data
+#### Unsuccessful
 ```
 header:
 {
-    "status": 200
+    "status": 400
+}
+body:
+{
+    "error": "error 종류 ex) Missing password"
 }
 ```
