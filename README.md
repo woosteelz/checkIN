@@ -155,7 +155,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 >   }
 >   body:
 >   {
->       "agentID": 로그인한 ID
 >       "siteInfo": ['사이트 등록정보1', '사이트 등록정보2' ... ]
 >   }
 >   ```
