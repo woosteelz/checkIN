@@ -23,11 +23,9 @@ yarn build
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-
-
+<hr/>
 
 # API
-
 > ## POST /signup
 > ### Request Data
 > ```
@@ -60,7 +58,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 >       "error": "error 종류 ex) Missing password"
 >   }
 >   ```
-
+  
 
 
 > ## POST /signin
