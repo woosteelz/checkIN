@@ -15,7 +15,7 @@
             <v-window v-model="step">
               <v-window-item :value="1">
                 <v-card-text>
-                  <v-text-field v-model="email" label="Please enter your Email" :rules="rules.emailRules"/>
+                  <v-text-field v-model="agentID" label="Please enter your Email" :rules="rules.emailRules"/>
                   <span class="caption grey--text text--darken-1">
                     This is the email you will use to login to your Vuetify
                     account
@@ -57,6 +57,17 @@
                     Please enter a password for your account
                   </span>
                 </v-card-text>
+                <div class="pa-2">
+                <v-checkbox
+                  v-model="agreement"
+                  :rules="rules.required"
+                  color="deep-purple"
+                >
+                  <template v-slot:label>
+                    위치정보 수집에 동의합니다 *
+                  </template>
+                </v-checkbox>
+                </div>
               </v-window-item>
 
               <!-- 회원가입 완료 페이지 -->
@@ -69,7 +80,7 @@
                     src="https://cdn.vuetifyjs.com/images/logos/v.svg"
                   ></v-img>
                   <h3 class="title font-weight-light mb-2">
-                    Password Changed!
+                    Welcome to Checkin!
                   </h3>
                   <span class="caption grey--text">Thanks for signing up!</span>
                 </div>
@@ -78,7 +89,7 @@
             <v-divider/>
 
             <v-card-actions v-if="step!==4">
-              <v-btn text @click="$router.push({ name: 'Login' })">
+              <v-btn text @click="$router.push({ name: 'SignIn' })">
                 Close
               </v-btn>
               <v-spacer></v-spacer>
@@ -95,11 +106,12 @@
               </v-btn>
             </v-card-actions>
             <v-card-actions v-else>
+              
               <v-btn
                 color="#66BB6A"
                 depressed
                 block
-                @click="$router.push({ name: 'Login' })"
+                @click="signUp"
               >
                 Done
               </v-btn>
@@ -118,6 +130,7 @@ export default {
       agentID: '',
       password: '',
       confirmPassword: '',
+      agreement: false,
       step: 1,
       length: 6,
       rules: {

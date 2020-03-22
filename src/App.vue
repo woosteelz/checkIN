@@ -38,6 +38,7 @@
     </v-navigation-drawer>
 
     <!-- app 바 영역 -->
+<<<<<<< HEAD
     <v-app-bar max-height="48" dark dense>
       <v-app-bar-nav-icon @click="drawer = true" />
 
@@ -78,6 +79,8 @@
             <v-list-item-avatar>
               <img src="" />
             </v-list-item-avatar>
+    <v-app-bar height="50" color="deep-purple" dark dense>
+      <v-app-bar-nav-icon @click="drawer = true"/>
 
             <v-list-item-content>
               <v-list-item-title><span class="mx-1">USERNAME</span></v-list-item-title>
@@ -122,10 +125,10 @@
 
     <!-- 컨텐츠 탈부착 영역 -->
     <v-content>
-      <router-view></router-view>
+      <router-view/>
     </v-content>
 
-    <v-footer app> </v-footer>
+    <v-footer app/>
   </v-app>
 </template>
 

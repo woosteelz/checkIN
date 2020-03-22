@@ -1,43 +1,36 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Router from 'vue-router'
 
-Vue.use(VueRouter)
+Vue.use(Router)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
-  },
-  {
-    path: '/SignIn',
-    name: 'SignIn',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/account/SignIn.vue')
-  },
-  {
-    path: '/SignUp',
-    name: 'SignUp',
-    component: () => import(/* webpackChunkName: "about" */ '../views/account/SignUp.vue')
-  },
-  {
-    path: '/FindPassword',
-    name: 'FindPassword',
-    component: () => import(/* */ '../views/account/FindPassword.vue')
-  },
-  {
-    path: '/MainPage',
-    name: 'Main',
-    component: () =>import(/* */ '../views/Main.vue')
-  }
-]
-
-const router = new VueRouter({
-  mode: 'history',
+export default new Router({
+  mode: 'hash',
   base: process.env.BASE_URL,
-  routes
+  routes: [
+    {
+      name: 'Home',
+      path: '/',
+      component: () => import('@/views/Home'),
+    },
+    {
+      name: 'Main',
+      path: '/MainPage',
+      component: () =>import('@/views/Main.vue')
+    },
+    {
+      name: 'SignIn',
+      path: '/signin',
+      component: () => import('@/views/account/sign-in'),
+    },
+    {
+      name: 'SignUp',
+      path: '/signup',
+      component: () => import('@/views/account/sign-up'),
+    },
+    {
+      name: 'FindPassword',
+      path: '/findpassword',
+      component: () => import('@/views/account/find-password'),
+    },
+  ],
 })
-
-export default router
