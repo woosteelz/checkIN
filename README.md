@@ -28,10 +28,10 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 # API
 
-## Sign Up
-### POST /signup
+## Sign Up  ### POST /signup
 ### Request Data
 ```
+body:
 {
     "agentID": "회원가입 할 계정에 대한 이메일",
     "agentPW": "회원가입 할 계정에 대한 비밀번호",
@@ -42,16 +42,18 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ```
 ### Response Data
 ```
-status: 200
+header:
+{
+    "status": 200
+}
 {
     "message": "Success"
 }
 ```
-## Sign In
-
-### POST /signin
+## Sign In  ### POST /signin
 ### Request Data
 ```
+body:
 {
     "agentID": "회원가입 할 계정에 대한 이메일",
     "agentPW": "회원가입 할 계정에 대한 비밀번호",
@@ -59,31 +61,30 @@ status: 200
 ```
 ### Response Data
 ```
-status: 201
+header:
+{
+    "status": 201
+}
+body:
 {
     "agentID": 로그인한 ID
     "name": 이름
     "JWT": 토큰값
-    "siteInfo": [사이트 등록정보1, 사이트 등록정보2 ... ]
+    "siteInfo": ['사이트 등록정보1', '사이트 등록정보2' ... ]
 }
 ```
-## Sign Out
-
-### GET /signout
+## Sign Out ### GET /signout
 ### Request Data
 ```
+header:
 {
-    "agentID": "회원가입 할 계정에 대한 이메일",
-    "agentPW": "회원가입 할 계정에 대한 비밀번호",
+    "Authorization": "JWT값"
 }
 ```
 ### Response Data
 ```
-status: 201
+header:
 {
-    "agentID": 로그인한 ID
-    "name": 이름
-    "JWT": 토큰값
-    "siteInfo": [사이트 등록정보1, 사이트 등록정보2 ... ]
+    "status": 200
 }
 ```
