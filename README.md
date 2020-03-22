@@ -42,14 +42,14 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 > ```
 >
 > ### Response Data
-> #### Successful
-> ```
+>   * #### Successful
+>   ```
 >   header:
 >   {
 >       "status": 200
 >   }
 >   ```
-> #### Unsuccessful
+>   * #### Unsuccessful
 >   ```
 >   header:
 >   {
@@ -74,7 +74,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 >   ```
 >
 > ### Response Data
-> #### Successful
+>   * #### Successful
 >   ```
 >   header:
 >   {
@@ -88,7 +88,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 >       "siteInfo": ['사이트 등록정보1', '사이트 등록정보2' ... ]
 >   }
 >   ```
->   #### Unsuccessful
+>   * #### Unsuccessful
 >   ```
 >   header:
 >   {
@@ -111,15 +111,15 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 >   }
 >   ```
 >
->   ### Response Data
->   #### Successful
+> ### Response Data
+>   * #### Successful
 >   ```
 >   header:
 >   {
 >       "status": 200
 >   }
 >   ```
->   #### Unsuccessful
+>   * #### Unsuccessful
 >   ```
 >   header:
 >   {
