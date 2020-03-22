@@ -128,3 +128,45 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 >       "error": "error 종류 ex) Missing password"
 >   }
 >   ```
+
+> ## POST /main/addsite
+> ### Request Data
+>   ```
+>   header:
+>   {
+>       "Authorization": "JWT값"
+>   }
+>   body:
+>   {
+>       "agentID": "계정 이메일",
+>       "name": "자동 로그인할 웹사이트 별칭",
+>       "ID": "자동 로그인할 웹사이트의 ID",
+>       "PW": "자동 로그인할 웹사이트의 비밀번호",
+>       "URL": "로그인폼이 위치한 URL"
+>   }
+>   ```
+>
+> ### Response Data
+>   * #### Successful
+>   ```
+>   header:
+>   {
+>       "status": 201
+>   }
+>   body:
+>   {
+>       "agentID": 로그인한 ID
+>       "siteInfo": ['사이트 등록정보1', '사이트 등록정보2' ... ]
+>   }
+>   ```
+>   * #### Unsuccessful
+>   ```
+>   header:
+>   {
+>       "status": 400
+>   }
+>   body:
+>   {
+>       "error": "error 종류 ex) Missing password"
+>   }
+>   ```
