@@ -20,17 +20,17 @@ export default new Router({
     {
       name: 'SignIn',
       path: '/signin',
-      component: () => import('@/views/account/sign-in'),
+      component: () => import('@/views/account/SignIn'),
     },
     {
       name: 'SignUp',
       path: '/signup',
-      component: () => import('@/views/account/sign-up'),
+      component: () => import('@/views/account/SignUp'),
     },
     {
       name: 'FindPassword',
       path: '/findpassword',
-      component: () => import('@/views/account/find-password'),
+      component: () => import('@/views/account/FindPassword'),
     },
   ],
 })
