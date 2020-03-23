@@ -9,10 +9,13 @@
           </v-toolbar>
           <div class="pa-3">
             <v-text-field v-model="agentID" :rules="rules.emailRules" label="Please enter your email"/>
-            <v-text-field v-model="password" :rules="rules.passwordRules" type="password" label="Please enter your password"/>
-            <v-btn @click="signIn" color="#43A047" block depressed large
-              >Check in</v-btn
+            <v-text-field v-model="agentPW" :rules="rules.passwordRules" type="password" label="Please enter your password"/>
+            <v-btn
+              @click="signIn({agentID, agentPW, jwtString, uuid, result})"
+              @keypress.enter="signIn({agentID, agentPW, jwtString, uuid, result})" color="#43A047" block depressed large
             >
+              Check in
+            </v-btn>
             <div class="my-5">
               <v-divider />
             </div>
@@ -23,7 +26,7 @@
                 block
                 depressed
                 large
-                >Sign Up</v-btn
+                >Create Account</v-btn
               >
             </div>
             <div class="my-2">
@@ -45,40 +48,30 @@
 
 <script>
 import axios from "axios";
+import { mapActions } from "vuex";
 
 export default {
-  data: () => ({
-    agentID: '',
-    password: '',
-    rules: {        
-      emailRules: [
+  data() {
+    return {
+      jwtString: null,
+      agentID: '',
+      agentPW: '',
+      uuid: null,
+      result: null,
+      rules: {        
+        emailRules: [
           v => !!v || 'E-mail is required',
           v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '올바른 이메일 형식이 아닙니다! 다시 입력해주세요',
-      ],
-      passwordRules: [
-          v => !!v || 'Password is required',
-      ],
-    }
-  }),
-  methods: {
-    signIn() {
-      const id = this.agentID
-      const pwd = this.password
-
-      if(!id || !pwd) {
-        alert("이메일 및 비밀번호를 확인하세욧!");
-        return false
+        ],
+        passwordRules: [
+          v => !!v || 'Password is required'
+        ],
       }
-      axios.post("http://18.218.11.150:8080/checkIN/signIn", {id, pwd})
-        .then((res) => {
-          if (res.data.result === true) {
-            alert("로그인 성공!");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     }
+  },
+  methods: {
+    ...mapActions(["signIn"])
   }
-};
+}
 </script>
+
