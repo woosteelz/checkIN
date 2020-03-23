@@ -47,8 +47,18 @@ export default new Vuex.Store({
           console.log(err);
         });
     },
-    signOut( {commit} ) {
-
+    signOut( {state, commit} ) {
+      let config = {
+        headers: {
+          "Authorization": state.JWT
+        }
+      }
+      axios.post("http://18.218.11.150:8080/checkIN/signOut", state.userInfo.agentID)
+      .then((res) => {
+        res.data.result === true
+        ? (commit("signOut"))
+        : alert("로그아웃 실패")
+      })
     }
   },
   modules: {

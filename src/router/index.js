@@ -13,9 +13,9 @@ export default new Router({
       component: () => import('@/views/Home'),
     },
     {
-      name: 'Main',
+      name: 'MainPage',
       path: '/MainPage',
-      component: () =>import('@/views/Main.vue')
+      component: () =>import('@/views/MainPage.vue')
     },
     {
       name: 'SignIn',

@@ -15,12 +15,12 @@
             <v-window v-model="step">
               <v-window-item :value="1">
                 <v-card-text>
-                  <v-text-field v-model="agentID" label="Please enter your Email" :rules="rules.emailRules"/>
+                  <v-text-field color="blue" v-model="agentID" label="Please enter your Email" :rules="rules.emailRules"/>
                   <span class="caption grey--text text--darken-1">
                     This is the email you will use to login to your Vuetify
                     account
                   </span>
-                  <v-btn block :disabled="!rules.email">Send Confirm Code</v-btn>
+                  <v-btn block :disabled="false">Send Confirm Code</v-btn>
                 </v-card-text>
               </v-window-item>
 
@@ -29,9 +29,10 @@
                 <v-card-text>
                   <v-text-field
                     label="Please enter your Confirm Code"
+                    color="blue"
                   />
                   <span class="caption grey--text text--darken-1">
-                    This is the email you will use to login to your Vuetify
+                    This is the email you will use to signin to your checkIN
                     account
                   </span>
                   <v-btn block>Confirm Email</v-btn>
@@ -46,12 +47,14 @@
                     :rules="rules.passwordRules"
                     label="Password"
                     type="password"
+                    color="blue"
                   />
                   <v-text-field
                     v-model="confirmPassword"
                     :rules="rules.checkPasswordRules"
                     label="Confirm Password"
                     type="password"
+                    color="blue"
                   />
                   <span class="caption grey--text text--darken-1">
                     Please enter a password for your account
@@ -61,7 +64,7 @@
                 <v-checkbox
                   v-model="agreement"
                   :rules="rules.required"
-                  color="deep-purple"
+                  color="blue"
                 >
                   <template v-slot:label>
                     위치정보 수집에 동의합니다 *
@@ -111,7 +114,7 @@
                 color="#66BB6A"
                 depressed
                 block
-                @click="signUp"
+                @click="$router.push({ name: 'SignIn' })"
               >
                 Done
               </v-btn>

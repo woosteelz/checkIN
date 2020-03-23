@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height style="max-width:450px">
+  <v-container fill-height style="max-width:450px" >
     <v-layout align-center row wrap>
       <v-flex xs12>
         <v-card>
@@ -8,8 +8,8 @@
             <v-spacer></v-spacer>
           </v-toolbar>
           <div class="pa-3">
-            <v-text-field v-model="agentID" :rules="rules.emailRules" label="Please enter your email"/>
-            <v-text-field v-model="agentPW" :rules="rules.passwordRules" type="password" label="Please enter your password"/>
+            <v-text-field color="blue" v-model="agentID" :rules="rules.emailRules" label="Please enter your email"/>
+            <v-text-field color="blue" v-model="agentPW" :rules="rules.passwordRules" type="password" label="Please enter your password"/>
             <v-btn
               @click="signIn({agentID, agentPW, jwtString, uuid, result})"
               @keypress.enter="signIn({agentID, agentPW, jwtString, uuid, result})" color="#43A047" block depressed large

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app> 
 
     <!-- 네비게이션 드로어 영역-->
     <v-navigation-drawer v-model="drawer" absolute temporary>
@@ -39,13 +39,13 @@
     </v-navigation-drawer>
 
     <!-- app 바 영역 -->
-    <v-app-bar max-height="48" color="primary lighten-2" dense>
+    <v-app-bar dark max-height="48" color="primary" dense>
 
       <!-- 메뉴열기 -->
       <v-app-bar-nav-icon @click="drawer = true" />
 
       <v-toolbar-title style="width:300px">
-        <span>checkIN</span>
+        <span class=""><strong>checkIN</strong></span>
       </v-toolbar-title>
 
       <!-- 검색창 -->
@@ -58,6 +58,7 @@
         prepend-inner-icon="mdi-magnify"
         label="Search"
         class="hidden-sm-and-down"
+        color="blue"
       />
       <v-spacer />
 
@@ -73,11 +74,12 @@
 
     <!-- 컨텐츠 탈부착 영역 -->
     <v-content>
-      <router-view />
+      <router-view/>
     </v-content>
 
+
     <v-footer
-    color="primary lighten-2"
+    color="secondary"
     dark
     padless
   >
@@ -96,7 +98,7 @@
         {{ link }}
       </v-btn>
       <v-col
-        class="primary lighten-1 py-4 text-center white--text"
+        class="primary py-4 text-center white--text"
         cols="12"
       >
         <strong>Copyright by checkIN service team</strong>
@@ -136,3 +138,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#app {
+  background-color: #202B43;
+}
+</style>
