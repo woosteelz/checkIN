@@ -21,11 +21,12 @@
             <v-window v-model="step">
               <v-window-item :value="1">
                 <v-card-text>
-                  <v-text-field color="blue" v-model="agentID" label="Please enter your Email" :rules="rules.emailRules"/>
+                  <!-- <v-text-field color="blue" v-model="agentID" label="Please enter your Email" :rules="rules.emailRules"/>
                   <span class="caption grey--text text--darken-1">
                     This is the email you will use to login to your Vuetify
                     account
-                  </span>
+                  </span> -->
+                  <VTextFieldWithValidation color="blue" rules="required|email" v-model="agentID" label="Please enter your Email" />
                   <v-btn block @click="verifyEmail({agentID, agentPW, name, errorCount, numberOfDevice})">Send Confirm Code</v-btn>
                 </v-card-text>
               </v-window-item>
@@ -48,34 +49,28 @@
               <!-- 패스워드 입력 및 확인란 -->
               <v-window-item :value="3">
                 <v-card-text>
-                  <v-text-field
+                  <VTextFieldWithValidation vid="agentPW" color="blue" rules="required|password|min:6" v-model="agentPW" label="Password" type="password"/>
+                  <!-- <v-text-field
                     v-model="agentPW"
                     :rules="rules.passwordRules"
                     label="Password"
                     type="password"
                     color="blue"
-                  />
-                  <v-text-field
+                  /> -->
+                  <VTextFieldWithValidation color="blue" rules="required|confirmed:confirmPassword" v-model="confirmPassword" label="Password Confirmation" type="password"/>
+                  <!-- <v-text-field
                     v-model="confirmPassword"
                     :rules="rules.checkPasswordRules"
                     label="Confirm Password"
                     type="password"
                     color="blue"
-                  />
+                  /> -->
                   <span class="caption grey--text text--darken-1">
                     Please enter a password for your account
                   </span>
                 </v-card-text>
                 <div class="pa-2">
-                <v-checkbox
-                  v-model="agreement"
-                  :rules="rules.required"
-                  color="blue"
-                >
-                  <template v-slot:label>
-                    위치정보 수집에 동의합니다 *
-                  </template>
-                </v-checkbox>
+                <VCheckBoxWithValidation  color="blue" rules="required" v-model="agreement" label="위치정보 수집에 동의합니다 *" />
                 </div>
               </v-window-item>
 
@@ -133,9 +128,18 @@
 </template>
 
 <script>
+import { ValidationObserver, ValidationProvider } from "vee-validate";
+import VTextFieldWithValidation from '@/components/inputs/VTextFieldWithValidation';
+import VCheckBoxWithValidation from '@/components/inputs/VCheckBoxWithValidation';
 import { mapState, mapActions } from 'vuex';
 import axios from 'axios'
 export default {
+  components: {
+    ValidationObserver,
+    ValidationProvider,
+    VTextFieldWithValidation,
+    VCheckBoxWithValidation
+  },
   data ()  {
     return {
       agentID: null,
