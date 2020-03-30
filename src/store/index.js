@@ -13,7 +13,14 @@ export default new Vuex.Store({
       errorCount: null,
       numberOfDevice: null,
       JWT: null,
-      siteInfo: [],
+      siteInfo: [
+        {
+          name: "Google1111",
+          URL: "https://www.google.com",
+          ID: "",
+          PW: ""
+        }
+      ],
       flag: {
         isSignedIn: false,
         isSignedInError: false,

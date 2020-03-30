@@ -1,9 +1,9 @@
 <template>
-  <v-card>
-    <v-card-title primary-title>
+  <v-card dark color="accent lighten-2">
+    <v-card-title primary-title class="accent and justify-center">
       새 사이트 등록
     </v-card-title>
-    <v-card-text>
+    <v-card-text class="pa-10">
       <v-text-field
         ref="name"
         v-model="name"
@@ -38,13 +38,13 @@
         ref="password"
         v-model="password"
         :rules="[() => !!state || 'This field is required']"
-        label="State/Province/Region"
+        label="Password"
         required
         placeholder="해당 사이트에 로그인하기 위한 비밀번호를 입력해주세요."
       />
-      <v-divider class="mt-12"></v-divider>
+      <v-divider class="mt-3"></v-divider>
       <v-card-actions>
-          <v-btn text>취소</v-btn>
+          <v-btn large depressed color="error">취소</v-btn>
           <v-spacer></v-spacer>
           <v-slide-x-reverse-transition>
             <v-tooltip
@@ -53,6 +53,8 @@
             >
               <template v-slot:activator="{ on }">
                 <v-btn
+                  depressed
+                  large
                   icon
                   class="my-0"
                   @click="resetForm"
@@ -64,9 +66,10 @@
               <span>Refresh form</span>
             </v-tooltip>
           </v-slide-x-reverse-transition>
-          <v-btn color="primary" text @click="submit">등록</v-btn>
+          <v-btn large depressed color="success" @click="submit">등록</v-btn>
         </v-card-actions>
-  </v-card-text>
+    </v-card-text>
+  </v-card>
 </template>
 <script>
 export default {
