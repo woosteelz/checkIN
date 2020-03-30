@@ -6,11 +6,17 @@
     <v-container fill-height style="max-width:450px">
       <v-layout align-center row wrap>
         <v-flex xs12>
+
           <v-card>
+            <v-alert v-if="isDuplicated" type="error" tile>
+              Already exists! Enter a diffrent agentID!
+            </v-alert>
+            <v-alert v-else-if="hasFormError" type="error" tile>
+              Please enter the correct Form!
+            </v-alert>
             <v-card-title flat primary-title>
               {{ currentTitle }}
             </v-card-title>
-
             <!-- 이메일 입력란 -->
             <v-window v-model="step">
               <v-window-item :value="1">
@@ -20,7 +26,7 @@
                     This is the email you will use to login to your Vuetify
                     account
                   </span>
-                  <v-btn block :disabled="false">Send Confirm Code</v-btn>
+                  <v-btn block @click="verifyEmail({agentID, agentPW, name, errorCount, numberOfDevice})">Send Confirm Code</v-btn>
                 </v-card-text>
               </v-window-item>
 
@@ -43,7 +49,7 @@
               <v-window-item :value="3">
                 <v-card-text>
                   <v-text-field
-                    v-model="password"
+                    v-model="agentPW"
                     :rules="rules.passwordRules"
                     label="Password"
                     type="password"
@@ -127,13 +133,17 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import axios from 'axios'
 export default {
   data ()  {
     return {
-      agentID: '',
-      password: '',
-      confirmPassword: '',
+      agentID: null,
+      agentPW: null,
+      name: null,
+      errorCount: null,
+      numberOfDevice: null,
+      confirmPassword: null,
       agreement: false,
       step: 1,
       length: 6,
@@ -157,6 +167,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(["hasFormError", "isDuplicated"]),
     currentTitle() {
       switch (this.step) {
         case 1:
@@ -171,6 +182,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["verifyEmail"]),
     signUp() {
       const agentID = this.agentID
       const agentPW = this.password

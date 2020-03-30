@@ -6,12 +6,40 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userInfo: null,
-    JWT: null,
-    isSignedIn: false,
-    isSignedInError: false
+    userInfo: {
+      agentID: null,
+      // agentPW: null,
+      name: null,
+      errorCount: null,
+      numberOfDevice: null,
+      JWT: null,
+      siteInfo: [],
+      flag: {
+        isSignedIn: false,
+        isSignedInError: false,
+      }
+    },
+    isDuplicated: false,
+    hasFormError: false
   },
   mutations: {
+    init(state) {
+      state.hasFormError = false;
+      state.isDuplicated = false;
+    },
+    hasFormError(state) {
+      state.hasFormError = true;
+    },
+    isDuplicated(state) {
+      state.isDuplicated = true;
+    },
+    verifyEmailSuccess(state) {
+      state.hasFormError = false;
+      state.isDuplicated = false;
+    },
+    signUp(){
+
+    },
     // Sigin In 성공
     signInSuccess(state, payload) {
       state.isSignedIn = true
@@ -30,6 +58,25 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    verifyEmail ( { commit } , agentAccountDTO ) {
+      if(!agentAccountDTO.agentID) {
+        commit("hasFormError")
+        return false
+      }
+      axios.post("http://18.218.11.150:8080/checkIN/signUp/verifyEmail", agentAccountDTO)
+
+        .then((res) => {
+          res.data.result === true
+          ? commit("verifyEmailSuccess")
+          : commit("isDuplicated")
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    signUp( {commit}, signUpObj ) {
+
+    },
     signIn( { commit }, loginObj) {
 
       if(!loginObj.agentID || !loginObj.agentPW) {
@@ -48,6 +95,19 @@ export default new Vuex.Store({
         });
     },
     signOut( {state, commit} ) {
+      let config = {
+        headers: {
+          "Authorization": state.JWT
+        }
+      }
+      axios.post("http://18.218.11.150:8080/checkIN/signOut", state.userInfo.agentID)
+      .then((res) => {
+        res.data.result === true
+        ? (commit("signOut"))
+        : alert("로그아웃 실패")
+      })
+    },
+    addSite( { commit }, siteInfo ) {
       let config = {
         headers: {
           "Authorization": state.JWT
