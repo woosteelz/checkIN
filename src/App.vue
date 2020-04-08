@@ -77,15 +77,11 @@
       <router-view/>
     </v-content>
 
-
+    <!-- app Footer -->
     <v-footer
     color="secondary"
     dark
     padless
-  >
-    <v-row
-      justify="center"
-      no-gutters
     >
       <v-btn
         v-for="link in links"
@@ -97,13 +93,8 @@
       >
         {{ link }}
       </v-btn>
-      <v-col
-        class="primary py-4 text-center white--text"
-        cols="12"
-      >
-        <strong>Copyright by checkIN service team</strong>
-      </v-col>
-    </v-row>
+      <v-spacer/>
+      <strong class="mr-5">Copyright by checkIN service team</strong>
   </v-footer>
   </v-app>
 </template>

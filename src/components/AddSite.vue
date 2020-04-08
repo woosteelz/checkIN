@@ -44,7 +44,7 @@
       />
       <v-divider class="mt-3"></v-divider>
       <v-card-actions>
-          <v-btn large depressed color="error">취소</v-btn>
+          <v-btn large depressed color="error" @click="dialog = false">취소</v-btn>
           <v-spacer></v-spacer>
           <v-slide-x-reverse-transition>
             <v-tooltip
@@ -71,14 +71,19 @@
     </v-card-text>
   </v-card>
 </template>
+
+
 <script>
+import MainPage from '../views/MainPage.vue';
+
 export default {
   data() {
+    $props: ['dialog']
     return {
       name: '',
       URL: '',
       ID: '',
-      password: ''
+      password: '',
     }
   },
 }

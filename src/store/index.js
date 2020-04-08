@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import { validate } from 'vee-validate';
 
 Vue.use(Vuex)
 
@@ -8,7 +9,7 @@ export default new Vuex.Store({
   state: {
     userInfo: {
       agentID: null,
-      // agentPW: null,
+      agentPW: null,
       name: null,
       errorCount: null,
       numberOfDevice: null,
@@ -36,9 +37,11 @@ export default new Vuex.Store({
     },
     hasFormError(state) {
       state.hasFormError = true;
+      state.isDuplicated = false;
     },
     isDuplicated(state) {
       state.isDuplicated = true;
+      state.hasFormError = false;
     },
     verifyEmailSuccess(state) {
       state.hasFormError = false;
@@ -49,24 +52,25 @@ export default new Vuex.Store({
     },
     // Sigin In 성공
     signInSuccess(state, payload) {
-      state.isSignedIn = true
-      state.isSignedInError = false
-      state.JWT = payload.headers["Authorization"]
+      state.userInfo.flag.isSignedIn = true
+      state.userInfo.flag.isSignedInError = false
+      state.userInfo.agentID = payload.data.agentID
+      state.userInfo.JWT = payload.data.jwtString;
     },
     signInFail(state) {
-      state.isSignedIn = false
-      state.isSignedInError = true   
+      state.userInfo.flag.isSignedIn = false
+      state.userInfo.flag.isSignedInError = true   
     },
     signOut(state) {
       state.userInfo = null
-      state.JWT = null
-      state.isSignedIn = false
-      state.isSignedInError = false
+      state.userInfo.JWT = null
+      state.userInfo.flag.isSignedIn = false
+      state.userInfo.flag.isSignedInError = false
     }
   },
   actions: {
     verifyEmail ( { commit } , agentAccountDTO ) {
-      if(!agentAccountDTO.agentID) {
+      if(validate(agentAccountDTO.agentID, "email")) {
         commit("hasFormError")
         return false
       }
@@ -85,12 +89,11 @@ export default new Vuex.Store({
 
     },
     signIn( { commit }, loginObj) {
-
       if(!loginObj.agentID || !loginObj.agentPW) {
         alert("이메일 및 비밀번호를 확인하세욧!");
         return false
       }
-      axios.post("http://18.218.11.150:8080/checkIN/signIn", loginObj)
+      axios.post('http://18.218.11.150:8080/checkIN/signIn', loginObj)
 
         .then((res) => {
           res.data.result === true
@@ -104,13 +107,13 @@ export default new Vuex.Store({
     signOut( {state, commit} ) {
       let config = {
         headers: {
-          "Authorization": state.JWT
+          "Authorizatio": state.userInfo.JWT
         }
       }
       axios.post("http://18.218.11.150:8080/checkIN/signOut", state.userInfo.agentID)
       .then((res) => {
         res.data.result === true
-        ? (commit("signOut"))
+        ? (commit("signOut"), $router.push({name: "SignIn"}))
         : alert("로그아웃 실패")
       })
     },

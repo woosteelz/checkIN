@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-y bottom left close-on-click>
     <template v-slot:activator="{ on }">
-      <v-btn v-if="isSignedIn" tile dark icon v-on="on">
+      <v-btn v-if="userInfo.flag.isSignedIn" tile dark icon v-on="on">
         <v-icon large color="blue lighten-2">mdi-account-circle</v-icon>
       </v-btn>
 
@@ -46,7 +46,7 @@
         <v-list-item-title>Account</v-list-item-title>
       </v-list-item>
 
-      <v-list-item @click="signOut">
+      <v-list-item @click="signOut({})">
         <v-list-item-icon>
           <v-icon>mdi-logout-variant</v-icon> 
         </v-list-item-icon>   
@@ -61,7 +61,7 @@ import { mapState, mapActions } from "vuex"
 export default {
   
   computed: {
-    ...mapState(["userInfo", "isSignedIn"])
+    ...mapState(["userInfo"])
   },
   methods: {
     ...mapActions(["signOut"])

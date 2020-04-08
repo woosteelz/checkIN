@@ -8,11 +8,10 @@
             <v-spacer></v-spacer>
           </v-toolbar>
           <div class="pa-3">
-            <v-text-field color="blue" v-model="agentID" :rules="rules.emailRules" label="Please enter your email"/>
-            <v-text-field color="blue" v-model="agentPW" :rules="rules.passwordRules" type="password" label="Please enter your password"/>
+            <VTextFieldWithValidation color="blue" rules="required|email" v-model="agentID" label="ID" placeholder="Please enter your Email"/>
+            <VTextFieldWithValidation color="blue" rules="required" v-model="agentPW" label="Password" placeholder="Please enter your Password" type="password"/>
             <v-btn
-              @click="signIn({agentID, agentPW, jwtString, uuid, result})"
-              @keypress.enter="signIn({agentID, agentPW, jwtString, uuid, result})" color="#43A047" block depressed large
+              @click="signIn({agentID, agentPW, jwtString, uuid, result})" color="#43A047" block depressed large
             >
               Check in
             </v-btn>
@@ -49,6 +48,7 @@
 <script>
 import axios from "axios";
 import { mapActions } from "vuex";
+import VTextFieldWithValidation from '@/components/inputs/VTextFieldWithValidation';
 
 export default {
   data() {
@@ -57,17 +57,11 @@ export default {
       agentID: '',
       agentPW: '',
       uuid: null,
-      result: null,
-      rules: {        
-        emailRules: [
-          v => !!v || 'E-mail is required',
-          v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '올바른 이메일 형식이 아닙니다! 다시 입력해주세요',
-        ],
-        passwordRules: [
-          v => !!v || 'Password is required'
-        ],
-      }
+      result: null
     }
+  },
+  components: {
+    VTextFieldWithValidation
   },
   methods: {
     ...mapActions(["signIn"])

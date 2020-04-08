@@ -8,25 +8,24 @@
         <v-flex xs12>
 
           <v-card>
+            <!-- 이메일 중복 경고창 -->
             <v-alert v-if="isDuplicated" type="error" tile>
               Already exists! Enter a diffrent agentID!
             </v-alert>
+
             <v-alert v-else-if="hasFormError" type="error" tile>
               Please enter the correct Form!
             </v-alert>
+
             <v-card-title flat primary-title>
               {{ currentTitle }}
             </v-card-title>
+
             <!-- 이메일 입력란 -->
             <v-window v-model="step">
               <v-window-item :value="1">
                 <v-card-text>
-                  <!-- <v-text-field color="blue" v-model="agentID" label="Please enter your Email" :rules="rules.emailRules"/>
-                  <span class="caption grey--text text--darken-1">
-                    This is the email you will use to login to your Vuetify
-                    account
-                  </span> -->
-                  <VTextFieldWithValidation color="blue" rules="required|email" v-model="agentID" label="Please enter your Email" />
+                  <VTextFieldWithValidation color="blue" rules="required|email" v-model="agentID" label="ID" placeholder="Please enter your Email" />
                   <v-btn block @click="verifyEmail({agentID, agentPW, name, errorCount, numberOfDevice})">Send Confirm Code</v-btn>
                 </v-card-text>
               </v-window-item>
@@ -35,7 +34,8 @@
               <v-window-item :value="2">
                 <v-card-text>
                   <v-text-field
-                    label="Please enter your Confirm Code"
+                    label="Confirm Code"
+                    placeholder="Please enter your Confirm Code"
                     color="blue"
                   />
                   <span class="caption grey--text text--darken-1">
@@ -50,21 +50,7 @@
               <v-window-item :value="3">
                 <v-card-text>
                   <VTextFieldWithValidation vid="agentPW" color="blue" rules="required|password|min:6" v-model="agentPW" label="Password" type="password"/>
-                  <!-- <v-text-field
-                    v-model="agentPW"
-                    :rules="rules.passwordRules"
-                    label="Password"
-                    type="password"
-                    color="blue"
-                  /> -->
                   <VTextFieldWithValidation color="blue" rules="required|confirmed:confirmPassword" v-model="confirmPassword" label="Password Confirmation" type="password"/>
-                  <!-- <v-text-field
-                    v-model="confirmPassword"
-                    :rules="rules.checkPasswordRules"
-                    label="Confirm Password"
-                    type="password"
-                    color="blue"
-                  /> -->
                   <span class="caption grey--text text--darken-1">
                     Please enter a password for your account
                   </span>
@@ -133,6 +119,7 @@ import VTextFieldWithValidation from '@/components/inputs/VTextFieldWithValidati
 import VCheckBoxWithValidation from '@/components/inputs/VCheckBoxWithValidation';
 import { mapState, mapActions } from 'vuex';
 import axios from 'axios'
+
 export default {
   components: {
     ValidationObserver,
@@ -149,25 +136,7 @@ export default {
       numberOfDevice: null,
       confirmPassword: null,
       agreement: false,
-      step: 1,
-      length: 6,
-      rules: {
-        emailRules: [
-          v => !!v || 'E-mail is required',
-          v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '올바른 이메일 형식이 아닙니다! 다시 입력해주세요',
-        ],
-        passwordRules: [
-          v => !!v || 'Password is required',
-          v => v.length >= this.length || 'Password must be less than 6 characters',
-          v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/.test(v) ||
-          "Password must contain an upper case letter, a numeric character, and a special character"
-        ],
-        checkPasswordRules: [
-          v => !!v || 'Confirm password is required',
-          v => this.password === this.confirmPassword ||'It does not match'
-        ],
-        required: [v => !!v || "This field is required"]
-      }
+      step: 1
     }
   },
   computed: {
@@ -175,7 +144,7 @@ export default {
     currentTitle() {
       switch (this.step) {
         case 1:
-          return "Sign-Up";
+          return "Sign Up";
         case 2:
           return "Validate a confirm code";
         case 3:
