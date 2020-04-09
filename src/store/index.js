@@ -5,6 +5,22 @@ import { validate } from 'vee-validate';
 
 Vue.use(Vuex)
 
+const USER_INFO = () => { 
+  return {
+    agentID: null,
+    agentPW: null,
+    name: null,
+    errorCount: null,
+    numberOfDevice: null,
+    JWT: null,
+    siteInfo: [],
+    flag: {
+      isSignedIn: false,
+      isSignedInError: false,
+    }
+  }
+}
+
 export default new Vuex.Store({
   state: {
     userInfo: {
@@ -29,6 +45,9 @@ export default new Vuex.Store({
     },
     isDuplicated: false,
     hasFormError: false
+  },
+  getters: {
+
   },
   mutations: {
     init(state) {
@@ -62,10 +81,7 @@ export default new Vuex.Store({
       state.userInfo.flag.isSignedInError = true   
     },
     signOut(state) {
-      state.userInfo = null
-      state.userInfo.JWT = null
-      state.userInfo.flag.isSignedIn = false
-      state.userInfo.flag.isSignedInError = false
+      state.userInfo = USER_INFO()
     }
   },
   actions: {
@@ -96,20 +112,24 @@ export default new Vuex.Store({
       axios.post('http://18.218.11.150:8080/checkIN/signIn', loginObj)
 
         .then((res) => {
-          res.data.result === true
-          ? (commit("signInSuccess", res))
-          : commit("signInFail")
+          if(res.data.result === true){
+            commit("signInSuccess", res)
+            axios.defaults.headers.common['Authorization'] = res.data.jwtString;
+          }
+          else{
+            commit("signInFail")
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     },
     signOut( {state, commit} ) {
-      let config = {
-        headers: {
-          "Authorizatio": state.userInfo.JWT
-        }
-      }
+      // let config = {
+      //   headers: {
+      //     "Authorization": state.userInfo.JWT
+      //   }
+      // }
       axios.post("http://18.218.11.150:8080/checkIN/signOut", state.userInfo.agentID)
       .then((res) => {
         res.data.result === true
@@ -120,7 +140,7 @@ export default new Vuex.Store({
     addSite( { commit }, siteInfo ) {
       let config = {
         headers: {
-          "Authorization": state.JWT
+          "Authorization": state.userInfo.JWT
         }
       }
       axios.post("http://18.218.11.150:8080/checkIN/signOut", state.userInfo.agentID)
