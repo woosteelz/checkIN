@@ -115,6 +115,7 @@ export default new Vuex.Store({
           if(res.data.result === true){
             commit("signInSuccess", res)
             axios.defaults.headers.common['Authorization'] = res.data.jwtString;
+            this.$router.push({ name: 'MainPage' })
           }
           else{
             commit("signInFail")
