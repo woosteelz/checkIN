@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import router from '@/router/index'
 import { validate } from 'vee-validate';
 
 Vue.use(Vuex)
@@ -115,7 +116,7 @@ export default new Vuex.Store({
           if(res.data.result === true){
             commit("signInSuccess", res)
             axios.defaults.headers.common['Authorization'] = res.data.jwtString;
-            this.$router.push({ name: 'MainPage' })
+            router.push({ name: 'MainPage' })
           }
           else{
             commit("signInFail")
