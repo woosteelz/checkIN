@@ -1,11 +1,13 @@
 <template>
   <ValidationProvider :vid="vid" :name="$attrs.label" :rules="rules" v-slot="{ errors, valid }">
     <v-text-field
+      dark
       v-model="innerValue"
       :error-messages="errors"
       :success="valid"
       v-bind="$attrs"
       v-on="$listeners"
+      filled
     ></v-text-field>
   </ValidationProvider>
 </template>

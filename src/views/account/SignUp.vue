@@ -22,7 +22,7 @@
             </v-card-title>
 
             <!-- 이메일 입력란 -->
-            <v-window v-model="step">
+            <v-window v-model="level">
               <v-window-item :value="1">
                 <v-card-text>
                   <VTextFieldWithValidation color="blue" rules="required|email" v-model="agentID" label="ID" placeholder="Please enter your Email" />
@@ -144,6 +144,7 @@ export default {
       numberOfDevice: null,
       confirmPassword: null,
       agreement: false,
+      level: step
     }
   },
   computed: {
