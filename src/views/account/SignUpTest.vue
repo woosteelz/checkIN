@@ -8,7 +8,29 @@
         <div class="ma-3">
           <div class="ma-3">
             <form>
-              <VTextFieldWithValidation color="blue" rules="required|email" v-model="agentID" label="ID" placeholder="Please enter your Email"/>
+              <ValidationProvider name="email" rules="required|email" v-slot="{ errors, valid }">
+                <v-text-field
+                  dark
+                  v-model="agentID"
+                  label="ID"
+                  :error-messages="errors"
+                  :success="valid"
+                  placeholder="Please enter your Email"
+                  filled
+                >
+                  <template v-slot:append>
+                  <v-btn
+                    depressed 
+                    small
+                    color="blue"
+                    class="ma-0"
+                    @click="verifyEmail"
+                  >
+                    중복 확인
+                  </v-btn>
+                </template>
+                </v-text-field>
+              </ValidationProvider>
               <VTextFieldWithValidation vid="agentPW" color="blue" rules="required|password|min:6" v-model="agentPW" label="Password" type="password" placeholder="Please enter your Password"/>
               <VTextFieldWithValidation color="blue" rules="required|confirmed:confirmPassword" v-model="confirmPassword" label="Password Confirmation" type="password" placeholder="Please enter your Confirm Password"/>
               <VTextFieldWithValidation color="blue" rules="required" v-model="name" label="name" placeholder="Please enter your name" />
@@ -44,7 +66,9 @@ import axios from 'axios';
 export default {
   components: {
     VTextFieldWithValidation,
-    VCheckBoxWithValidation
+    VCheckBoxWithValidation,
+    ValidationObserver,
+    ValidationProvider
   },
 }
 </script>
