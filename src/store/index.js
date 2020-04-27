@@ -54,6 +54,7 @@ export default new Vuex.Store({
     },
     isDuplicated: false,
     hasFormError: false,
+    verifySuccess: false,
     codeMatchError: false,
   },
   getters: {
@@ -75,16 +76,15 @@ export default new Vuex.Store({
     verifyEmailSuccess(state, agentID, verify_code) {
       state.forSignUp.agentID = agentID;
       state.forSignUp.verify_code = verify_code;
+      state.verifySuccess = true;
       state.hasFormError = false;
       state.isDuplicated = false;
-      state.forSignUp.step++;
     },
     rejectConfirmCode(state) {
       state.codeMatchError = true;
     },
     confirmCode(state) {
       state.codeMatchError = false;
-      state.forSignUp.step++;
     },
 
     signUp(){

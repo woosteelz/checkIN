@@ -1,6 +1,6 @@
 <template>
   <v-container fill-height fluid>
-    <v-row align="center" justify="spcae-between">
+    <v-row align="center">
       <v-col cols="6">
         
       </v-col>
@@ -24,13 +24,14 @@
                     small
                     color="blue"
                     class="ma-0"
-                    @click="verifyEmail"
+                    @click="verifyEmail({agentID, agentPW, name, errorCount, numberOfDevice})"
                   >
                     중복 확인
                   </v-btn>
                 </template>
                 </v-text-field>
               </ValidationProvider>
+              <VTextFieldWithValidation v-if="verifySuccess" color="blue" rules="required" v-model="confirmCode" label="Confirmation Code" placeholder="Please enter your Confirmation Code"/>
               <VTextFieldWithValidation vid="agentPW" color="blue" rules="required|password|min:6" v-model="agentPW" label="Password" type="password" placeholder="Please enter your Password"/>
               <VTextFieldWithValidation color="blue" rules="required|confirmed:confirmPassword" v-model="confirmPassword" label="Password Confirmation" type="password" placeholder="Please enter your Confirm Password"/>
               <VTextFieldWithValidation color="blue" rules="required" v-model="name" label="name" placeholder="Please enter your name" />
@@ -69,6 +70,24 @@ export default {
     VCheckBoxWithValidation,
     ValidationObserver,
     ValidationProvider
+  },
+  data() {
+    return {
+      agentID: null,
+      agentPW: null,
+      name: null,
+      errorCount: null,
+      numberOfDevice: null,
+      confirmPassword: null,
+      agreement: false,
+      confirmCode: null,
+    }
+  },
+  computed: {
+    ...mapState(["forSignUp, hasFormError", "isDuplicated", "codeMatchError", "verifySuccess"]),
+  },
+  methods: {
+    ...mapActions(["verifyEmail"])
   },
 }
 </script>
