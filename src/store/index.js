@@ -56,6 +56,7 @@ export default new Vuex.Store({
     hasFormError: false,
     verifySuccess: false,
     codeMatchError: false,
+    isEmailExsisted: false,
   },
   getters: {
 
@@ -86,7 +87,9 @@ export default new Vuex.Store({
     confirmCode(state) {
       state.codeMatchError = false;
     },
-
+    findPwConfirmCode(state) {
+      state.isEmailExsisted = true;
+    },
     signUp(){
 
     },
@@ -165,6 +168,22 @@ export default new Vuex.Store({
         ? (commit("signOut"), $router.push({name: "SignIn"}))
         : alert("로그아웃 실패")
       })
+    },
+    emailCheck( { commit }, agentAccountDTO ){
+      if(!agentAccountDTO.agentID){
+        commit("hasFormError")
+        return false
+      }
+      axios.post("http://18.218.11.150:8080/checkIN/signUp/findPassword", agentAccountDTO)
+
+        .then((res) => {
+          res.data.result === true
+          ? commit("verifyEmailSuccess")
+          : commit("isDuplicated")
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     addSite( { commit }, siteInfo ) {
       let config = {

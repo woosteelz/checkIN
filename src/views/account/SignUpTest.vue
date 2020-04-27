@@ -8,6 +8,7 @@
         <div class="ma-3">
           <div class="ma-3">
             <form>
+              <validationObserver>
               <ValidationProvider name="email" rules="required|email" v-slot="{ errors, valid }">
                 <v-text-field
                   dark
@@ -33,8 +34,9 @@
               </ValidationProvider>
               <VTextFieldWithValidation v-if="verifySuccess" color="blue" rules="required" v-model="confirmCode" label="Confirmation Code" placeholder="Please enter your Confirmation Code"/>
               <VTextFieldWithValidation vid="agentPW" color="blue" rules="required|password|min:6" v-model="agentPW" label="Password" type="password" placeholder="Please enter your Password"/>
-              <VTextFieldWithValidation color="blue" rules="required|confirmed:confirmPassword" v-model="confirmPassword" label="Password Confirmation" type="password" placeholder="Please enter your Confirm Password"/>
+              <VTextFieldWithValidation color="blue" rules="required|confirmed:agentPW" v-model="confirmPassword" label="Password Confirmation" type="password" placeholder="Please enter your Confirm Password"/>
               <VTextFieldWithValidation color="blue" rules="required" v-model="name" label="name" placeholder="Please enter your name" />
+              </validationObserver>
             </form>
           </div>
           <div class="ma-3 and d-flex justify-space-between">
