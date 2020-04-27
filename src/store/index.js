@@ -178,8 +178,8 @@ export default new Vuex.Store({
 
         .then((res) => {
           res.data.result === true
-          ? commit("verifyEmailSuccess")
-          : commit("isDuplicated")
+          ? commit("findPwConfirmCode")
+          : commit("")
         })
         .catch((err) => {
           console.log(err);
