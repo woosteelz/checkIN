@@ -34,6 +34,7 @@
               <v-window-item :value="2">
                 <v-card-text>
                   <v-text-field
+                    v-model="confirmCode"
                     label="Confirm Code"
                     placeholder="Please enter your Confirm Code"
                     color="blue"
@@ -56,12 +57,19 @@
                   </span>
                 </v-card-text>
                 <div class="pa-2">
-                <VCheckBoxWithValidation  color="blue" rules="required" v-model="agreement" label="위치정보 수집에 동의합니다 *" />
+                <VCheckBoxWithValidation color="blue" rules="required" v-model="agreement" label="위치정보 수집에 동의합니다 *" />
                 </div>
               </v-window-item>
 
-              <!-- 회원가입 완료 페이지 -->
+              <!-- name 입력칸 -->
               <v-window-item :value="4">
+                <v-card-text>
+                  <VTextFieldWithValidation color="blue" v-model="name" label="name" placeholder="Please enter your name" />
+                </v-card-text>
+              </v-window-item>
+
+              <!-- 회원가입 완료 페이지 -->
+              <v-window-item :value="5">
                 <div class="pa-4 text-center">
                   <v-img
                     class="mb-4"
@@ -78,7 +86,7 @@
             </v-window>
             <v-divider/>
 
-            <v-card-actions v-if="step!==4">
+            <v-card-actions v-if="step!==5">
               <v-btn text @click="$router.push({ name: 'SignIn' })">
                 Close
               </v-btn>
@@ -87,7 +95,7 @@
                 Back
               </v-btn>
               <v-btn
-                :disabled="step === 4"
+                :disabled="step === 5"
                 color="#66BB6A"
                 depressed
                 @click="step++"
@@ -136,19 +144,20 @@ export default {
       numberOfDevice: null,
       confirmPassword: null,
       agreement: false,
-      step: 1
     }
   },
   computed: {
-    ...mapState(["hasFormError", "isDuplicated"]),
+    ...mapState(["hasFormError", "isDuplicated", "codeMatchError", "step"]),
     currentTitle() {
-      switch (this.step) {
+      switch (step) {
         case 1:
           return "Sign Up";
         case 2:
           return "Validate a confirm code";
         case 3:
           return "Create a password";
+        case 4: 
+          return "Enter your name or nickname"  ;
         default:
           return "Account created";
       }

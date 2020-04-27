@@ -24,6 +24,14 @@ const USER_INFO = () => {
 
 export default new Vuex.Store({
   state: {
+    forSignUp: {
+      agentID: null,
+      confirmCode: null,
+      name: null,
+      agentPW: null,
+      confirmPW: null,
+      step: 1
+    },
     userInfo: {
       agentID: null,
       agentPW: null,
@@ -45,7 +53,8 @@ export default new Vuex.Store({
       }
     },
     isDuplicated: false,
-    hasFormError: false
+    hasFormError: false,
+    codeMatchError: false,
   },
   getters: {
 
@@ -63,10 +72,21 @@ export default new Vuex.Store({
       state.isDuplicated = true;
       state.hasFormError = false;
     },
-    verifyEmailSuccess(state) {
+    verifyEmailSuccess(state, agentID, verify_code) {
+      state.forSignUp.agentID = agentID;
+      state.forSignUp.verify_code = verify_code;
       state.hasFormError = false;
       state.isDuplicated = false;
+      state.forSignUp.step++;
     },
+    rejectConfirmCode(state) {
+      state.codeMatchError = true;
+    },
+    confirmCode(state) {
+      state.codeMatchError = false;
+      state.forSignUp.step++;
+    },
+
     signUp(){
 
     },
@@ -87,7 +107,7 @@ export default new Vuex.Store({
   },
   actions: {
     verifyEmail ( { commit } , agentAccountDTO ) {
-      if(validate(agentAccountDTO.agentID, "email")) {
+      if(!agentAccountDTO.agentID) {
         commit("hasFormError")
         return false
       }
@@ -101,6 +121,13 @@ export default new Vuex.Store({
         .catch((err) => {
           console.log(err);
         });
+    },
+    confirmCode ({ state, commit }, verify_code) {
+      if(verify_code !== state.forSignUp.verify_code) {
+        commit("rejectConfirmCode")
+        return false
+      }
+      commit("ConfirmCode")
     },
     signUp( {commit}, signUpObj ) {
 

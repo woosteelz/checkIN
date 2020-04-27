@@ -10,8 +10,8 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>USERNAME</v-list-item-title>
-            <v-list-item-subtitle>userEmail</v-list-item-subtitle>
+            <v-list-item-title>{{ userInfo.name }}</v-list-item-title>
+            <v-list-item-subtitle>{{ userInfo.agentID }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
 
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import Profile from "@/components/Profile"
 import Edit from "@/components/Edit"
 
@@ -124,6 +124,9 @@ export default {
         'Contact Us',
       ],
   }),
+  computed: {
+    ...mapState(['userInfo'])
+  },
   methods: {
     ...mapActions(["signIn, signOut"])
   },
