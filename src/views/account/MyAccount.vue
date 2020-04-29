@@ -1,8 +1,32 @@
 <template>
-  <v-container>
+  <v-container id="myAccount" fluid fill-height>
     <v-row>
-      <v-col>
-        
+      <v-col cols="12">
+        <v-navigation-drawer dark absolute permanent color="#131C2E">
+          
+          <v-list>
+            <v-list-item link>
+              <v-list-item-content>
+                <v-list-item-title @click="$router.push({ name: 'MainPage' })">Home</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item link>
+              <v-list-item-content>
+                <v-list-item-title @click="$router.push({ name: 'Home' })">프로필 수정</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item link>
+              <v-list-item-content>
+                <v-list-item-title @click="$router.push({ name: 'Home' })">비밀번호 변경</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item link>
+              <v-list-item-content>
+                <v-list-item-title @click="$router.push({ name: 'Home' })">기타 설정</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-navigation-drawer>
       </v-col>
     </v-row>
   </v-container>
@@ -10,10 +34,16 @@
 
 <script>
 export default {
-
-}
+  data() {
+    return {
+      items: [
+        { title: "Home", icon: "mdi-home-city" },
+        { title: "My Account", icon: "mdi-account" },
+        { title: "Users", icon: "mdi-account-group-outline" },
+      ],
+    };
+  },
+};
 </script>
-
 <style>
-
 </style>

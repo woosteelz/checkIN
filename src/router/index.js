@@ -32,5 +32,10 @@ export default new Router({
       path: '/findpassword',
       component: () => import('@/views/account/FindPassword'),
     },
+    {
+      name: 'MyAccount',
+      path: '/myaccount',
+      component: () => import('@/views/account/MyAccount'),
+    },
   ],
 })

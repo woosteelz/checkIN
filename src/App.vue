@@ -44,7 +44,7 @@
       <!-- 메뉴열기 -->
       <v-app-bar-nav-icon @click="drawer = true" />
 
-      <v-toolbar-title style="width:300px">
+      <v-toolbar-title @click="$router.push({ name: 'Home'})" style="width:300px">
         <span class=""><strong>checkIN</strong></span>
       </v-toolbar-title>
 
@@ -135,6 +135,9 @@ export default {
 
 <style scoped>
 #app {
+  background-color: #202B43;
+}
+#myAccount {
   background-color: #202B43;
 }
 </style>
