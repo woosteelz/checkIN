@@ -28,11 +28,6 @@ export default new Router({
       component: () => import('@/views/account/SignUp'),
     },
     {
-      name: 'SignUpTest',
-      path: '/signup',
-      component: () => import('@/views/account/SignUpTest'),
-    },
-    {
       name: 'FindPassword',
       path: '/findpassword',
       component: () => import('@/views/account/FindPassword'),
