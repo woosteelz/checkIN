@@ -36,6 +36,23 @@ export default new Router({
       name: 'MyAccount',
       path: '/myaccount',
       component: () => import('@/views/account/MyAccount'),
+      children: [
+        {
+          name: 'EditProfile',
+          path: 'editProfile',
+          component: () => import('@/views/account/accountSub/EditProfile')
+        },
+        {
+          name: 'ChangePassword',
+          path: 'changepassword',
+          component: () => import('@/views/account/accountSub/ChangePassword')
+        },
+        {
+          name: 'Config',
+          path: 'config',
+          component: () => import('@/views/account/accountSub/Config')
+        }
+      ]
     },
   ],
 })
