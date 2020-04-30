@@ -2,13 +2,14 @@
   <v-container fill-height fluid>
     <v-row align="center" justify="center">
       <v-col cols="3" align-self="start">
-        <span class="text-center" align-start>
-          <strong>비밀번호 찾기</strong>
-        </span>
       </v-col>
       <v-col cols="6">
         <div class="ma-3">
           <div class="ma-3">
+            <span class="text-center and white--text">
+              <h2><strong>비밀번호 찾기</strong></h2>
+              <br>
+            </span>
             <ValidationObserver v-slot="{ invalid }">
               <form>
                 <ValidationProvider name="email" rules="required|email" v-slot="{ errors, valid }">
