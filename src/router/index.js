@@ -51,7 +51,12 @@ export default new Router({
           name: 'Config',
           path: 'config',
           component: () => import('@/views/account/accountSub/Config')
-        }
+        },
+        {
+          name: 'NewPassword',
+          path: 'newpassword',
+          component: () => import('@/views/account/accountSub/NewPassword')
+        },
       ]
     },
   ],
