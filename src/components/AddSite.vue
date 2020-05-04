@@ -84,11 +84,8 @@ export default {
       URL: '',
       ID: '',
       password: '',
+      dialog: tru
     }
   },
 }
 </script>
-
-<style>
-
-</style>

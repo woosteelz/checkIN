@@ -4,6 +4,8 @@
       <v-col cols="8">
         <span class="white--text"><h3>현재 비밀번호 입력</h3></span>
         <br>
+        <v-divider color="#607D8B" />
+        <br>
         <VTextFieldWithValidation
           vid="agentPW"
           color="blue"

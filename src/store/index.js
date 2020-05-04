@@ -113,7 +113,7 @@ export default new Vuex.Store({
         commit("hasFormError")
         return false
       }
-      axios.post("http://18.218.11.150:8080/checkIN/signUp/verifyEmail", agentAccountDTO)
+      axios.post("https://54.180.153.254/checkIN/signUp/verifyEmail", agentAccountDTO)
 
         .then((res) => {
           res.data.result === true
@@ -139,7 +139,7 @@ export default new Vuex.Store({
         alert("이메일 및 비밀번호를 확인하세욧!");
         return false
       }
-      axios.post('http://18.218.11.150:8080/checkIN/signIn', loginObj)
+      axios.post('https://54.180.153.254/checkIN/signIn', loginObj)
 
         .then((res) => {
           if(res.data.result === true){

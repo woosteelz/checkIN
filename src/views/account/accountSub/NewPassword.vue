@@ -3,7 +3,7 @@
     <v-row no-gutters>
       <v-col cols="8">
         <span class="white--text"><h3>새 비밀번호 입력</h3></span>
-        <br />
+        <br>
         <ValidationObserver>
           <form>
             <VTextFieldWithValidation
