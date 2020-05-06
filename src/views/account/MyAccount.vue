@@ -76,9 +76,11 @@
                 </v-card>
               </v-dialog>
             </div>
+
           </v-list>
         </v-navigation-drawer>
       </v-col>
+      
       <v-col cols="9" align-self="start">
         <router-view />
       </v-col>

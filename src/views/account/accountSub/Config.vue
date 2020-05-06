@@ -3,7 +3,9 @@
     <v-row no-gutters>
       <v-col cols="10">
         <span class="white--text"><h3 class="mb-3">기타 설정</h3></span>
+
         <v-divider color="#607D8B" />
+        <!-- OTP 사용 -->
         <div class="justify-space-between">
           <v-row class="justify-space-between" no-gutters>
             <span class="white--text and d-flex align-center">
@@ -12,19 +14,79 @@
             <v-switch dark dense v-model="use"></v-switch>
           </v-row>
         </div>
+        <!-- 브라우저 설정 -->
         <div class="justify-space-between">
           <v-row class="justify-space-between" no-gutters>
             <span class="white--text and d-flex align-center">
               <h5>브라우저 설정</h5>
             </span>
-            
-            <div class="justify-end"><v-select :items="items" label="Standard" dark></v-select></div>
+            <div class="justify-end">
+              <v-select :items="items" label="Standard" dark></v-select>
+            </div>
           </v-row>
         </div>
-        <v-divider color="#607D8B" />
+        <!-- 등록기기 관리 -->
+        <div class="justify-space-between">
+          <v-row class="justify-space-between" no-gutters>
+            <span class="white--text and d-flex align-center">
+              <h5>등록기기 관리</h5>
+            </span>
+            <div class="">
+              <v-dialog v-model="dialog" width="500">
+                <template v-slot:activator="{ on }">
+                  <div class="d-flex justify-end pt-5">
+                    <v-btn small v-on="on">
+                      조회
+                    </v-btn>
+                  </div>
+                </template>
+                <v-card>
+                  <v-card-title class="primary white--text">
+                    등록기기 목록
+                  </v-card-title>
+
+                  <v-card-text>
+                    <v-data-table
+                      v-model="selected"
+                      :headers="headers"
+                      :items="enrollInfo"
+                      :single-select="singleSelect"
+                      item-key="name"
+                      show-select
+                      class="elevation-1"
+                    >
+                      <template v-slot:top>
+                        <v-switch
+                          v-model="singleSelect"
+                          label="Single select"
+                          class="pa-3"
+                        ></v-switch>
+                      </template>
+                    </v-data-table>
+                  </v-card-text>
+
+                  <v-divider></v-divider>
+
+                  <v-card-actions>
+                    <v-btn color="primary" text @click="dialog = false">
+                      취소
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" text @click="dialog = false">
+                      설정 완료
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
+          </v-row>
+        </div>
+
+        <v-divider class="mt-5" color="#607D8B" />
+
         <div class="d-flex justify-end pt-5">
           <v-btn small @click="$router.push({ name: 'NewPassword' })">
-          submit
+            submit
           </v-btn>
         </div>
       </v-col>
@@ -36,7 +98,32 @@
 export default {
   data() {
     return {
+      dialog: false,
       use: true,
+      singleSelect: false,
+        selected: [],
+        headers: [
+          {
+            text: '등록 기기 명',
+            align: 'start',
+            sortable: false,
+            value: 'name',
+          },
+          { text: '등록 일시', value: 'enrollDate' },
+          { text: '등록 시간', value: 'enrollTime' },
+        ],
+        enrollInfo: [
+          {
+            name: 'iPhone11Pro',
+            enrollDate: '2020-05-05',
+            enrollTime: '17:25'
+          },
+          {
+            name: 'GalaxyNote9',
+            enrollDate: '2020-05-06',
+            enrollTime: '17:25'
+          },
+        ]
     };
   },
 };
