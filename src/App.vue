@@ -37,7 +37,23 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-
+    <div id="header">
+      <v-system-bar window dark height="48">
+        <v-icon>mdi-message</v-icon>
+        <span>10 unread messages</span>
+        <v-spacer></v-spacer>
+        <v-btn id="minus" icon tile @click="window_minimize()">
+          <v-icon small>mdi-minus</v-icon>
+        </v-btn>
+        <v-btn id="box" icon tile @click="change()">
+          <v-icon v-if="maximized" small>mdi-checkbox-multiple-blank-outline</v-icon>
+          <v-icon v-else small>mdi-checkbox-blank-outline</v-icon>
+        </v-btn>
+        <v-btn id="close" color="red" icon tile @click="window_close()">
+          <v-icon small>mdi-close</v-icon>
+        </v-btn>
+      </v-system-bar>
+    </div>
     <!-- app 바 영역 -->
     <v-app-bar dark max-height="48" color="primary" dense>
 
@@ -123,12 +139,35 @@ export default {
         'Team',
         'Contact Us',
       ],
+      maximized: false
   }),
   computed: {
     ...mapState(['userInfo'])
   },
   methods: {
-    ...mapActions(["signIn, signOut"])
+    ...mapActions(["signIn, signOut"]),
+    window_close() {
+      const remote=require('electron').remote
+      const currentWindow = remote.getCurrentWindow()
+      currentWindow.close()
+    },
+    window_minimize() {
+      const remote=require('electron').remote
+      const currentWindow = remote.getCurrentWindow()
+      currentWindow.minimize()
+    },
+    change() {
+      const remote=require('electron').remote
+      const currentWindow = remote.getCurrentWindow()
+      if(this.maximized === false) {
+        this.maximized = true
+        currentWindow.maximize()
+      }
+      else{
+        this.maximized = false
+        currentWindow.unmaximize()
+      }
+    }
   },
 };
 </script>
@@ -140,4 +179,30 @@ export default {
 #myAccount {
   background-color: #202B43;
 }
+#header {
+  -webkit-app-region: drag
+}
+#minus {
+  -webkit-app-region: no-drag
+  
+}
+#box {
+  -webkit-app-region: no-drag
+}
+#close {
+  -webkit-app-region: no-drag
+}
+#minus:hover {
+  background: grey;
+  opacity: 0.7;
+}
+#box:hover {
+  background: grey;
+  opacity: 0.7;
+}
+#close:hover {
+  background: red;
+  opacity: 0.9;
+}
+
 </style>

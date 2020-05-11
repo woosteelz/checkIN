@@ -11,7 +11,7 @@
             <VTextFieldWithValidation color="blue" rules="required|email" v-model="agentID" label="ID" placeholder="Please enter your Email"/>
             <VTextFieldWithValidation color="blue" rules="required" v-model="agentPW" label="Password" placeholder="Please enter your Password" type="password"/>
             <v-btn
-              @click="signIn({agentID, agentPW, jwtString, uuid, result})" color="#43A047" block depressed large
+              @click="signIn({agentID, agentPW, jwt, uuid, result})" color="#43A047" block depressed large
             >
               Check in
             </v-btn>
@@ -53,7 +53,7 @@ import VTextFieldWithValidation from '@/components/inputs/VTextFieldWithValidati
 export default {
   data() {
     return {
-      jwtString: null,
+      jwt: null,
       agentID: '',
       agentPW: '',
       uuid: null,

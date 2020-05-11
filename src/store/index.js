@@ -39,14 +39,7 @@ export default new Vuex.Store({
       errorCount: null,
       numberOfDevice: null,
       JWT: null,
-      siteInfo: [
-        {
-          name: "Google1111",
-          URL: "https://www.google.com",
-          ID: "",
-          PW: ""
-        }
-      ],
+      siteInfo: [],
       flag: {
         isSignedIn: false,
         isSignedInError: false,
@@ -97,7 +90,7 @@ export default new Vuex.Store({
       state.userInfo.flag.isSignedIn = true
       state.userInfo.flag.isSignedInError = false
       state.userInfo.agentID = payload.data.agentID
-      state.userInfo.JWT = payload.data.jwtString;
+      state.userInfo.JWT = payload.data.jwt;
     },
     signInFail(state) {
       state.userInfo.flag.isSignedIn = false
@@ -108,6 +101,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
+
     verifyEmail ( { commit } , agentAccountDTO ) {
       if(!agentAccountDTO.agentID) {
         commit("hasFormError")
@@ -124,6 +118,7 @@ export default new Vuex.Store({
           console.log(err);
         });
     },
+
     confirmCode ({ state, commit }, verify_code) {
       if(verify_code !== state.forSignUp.verify_code) {
         commit("rejectConfirmCode")
@@ -131,10 +126,12 @@ export default new Vuex.Store({
       }
       commit("ConfirmCode")
     },
+
     signUp( { state, commit }, agentAccountDTO ) {
       router.push({ name: 'SignIn' })
     },
-    signIn( { commit }, loginObj) {
+
+    signIn( { state, commit }, loginObj) {
       if(!loginObj.agentID || !loginObj.agentPW) {
         alert("이메일 및 비밀번호를 확인하세욧!");
         return false
@@ -144,7 +141,25 @@ export default new Vuex.Store({
         .then((res) => {
           if(res.data.result === true){
             commit("signInSuccess", res)
-            axios.defaults.headers.common['Authorization'] = res.data.jwtString;
+            
+            const loginData = { 
+              agentID: state.userInfo.agentID,
+              jwt: state.userInfo.JWT
+            }
+            // 로그인 후 사이트 정보 불러오기
+            axios.post('https://54.180.153.254/checkIN/siteRead', loginData)
+              .then((result) => {
+                if(result.data.result === true){
+                  for(var i = 0; i < result.data.list.length; i++){
+                    state.userInfo.siteInfo[i] = result.data.list[i];
+                    console.log(state.userInfo.siteInfo[i]);
+                  }
+                }
+                else{
+                  alert("사이트 정보 불러오기 실패!")
+                }
+            })
+
             router.push({ name: 'MainPage' })
           }
           else{
@@ -155,25 +170,24 @@ export default new Vuex.Store({
           console.log(err);
         });
     },
+
     signOut( {state, commit} ) {
-      // let config = {
-      //   headers: {
-      //     "Authorization": state.userInfo.JWT
-      //   }
-      // }
-      axios.post("http://18.218.11.150:8080/checkIN/signOut", state.userInfo.agentID)
+
+      const logoutData = { 
+        agentID: state.userInfo.agentID,
+        jwt: state.userInfo.JWT
+      }
+
+      axios.post("https://54.180.153.254/checkIN/signOut", logoutData)
       .then((res) => {
         res.data.result === true
-        ? (commit("signOut"), $router.push({name: "SignIn"}))
+        ? (commit("signOut") && $router.push({name: "SignIn"}))
         : alert("로그아웃 실패")
       })
     },
+
     addSite( { commit }, siteInfo ) {
-      let config = {
-        headers: {
-          "Authorization": state.userInfo.JWT
-        }
-      }
+
       axios.post("http://18.218.11.150:8080/checkIN/signOut", state.userInfo.agentID)
       .then((res) => {
         res.data.result === true
