@@ -37,45 +37,53 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <div id="header">
-      <v-system-bar window dark height="48">
-        <v-icon>mdi-message</v-icon>
-        <span>10 unread messages</span>
-        <v-spacer></v-spacer>
-        <v-btn id="minus" icon tile @click="window_minimize()">
+
+    <div class="d-flex" id="header">
+      <v-system-bar class="justify-space-between" app dark height="48" >
+        <v-toolbar-title @click="$router.push({ name: 'Home'})" style="width:300px">
+          <span class="ml-4"><strong>checkIN</strong></span>
+        </v-toolbar-title>
+          <!-- 검색창 -->
+        <span id="search" width="150">
+          <v-text-field
+            flat
+            rounded
+            dense
+            solo-inverted
+            hide-details
+            prepend-inner-icon="mdi-magnify"
+            label="Search"
+            class="hidden-sm-and-down"
+            color="blue"
+          />
+        </span>
+        <div>
+        <span id="profile" class="mr-4">
+          <edit class="mx-4"/>
+          <profile/>
+        </span>
+        <span>
+          <v-btn id="minus" icon tile @click="window_minimize()">
           <v-icon small>mdi-minus</v-icon>
-        </v-btn>
-        <v-btn id="box" icon tile @click="change()">
-          <v-icon v-if="maximized" small>mdi-checkbox-multiple-blank-outline</v-icon>
-          <v-icon v-else small>mdi-checkbox-blank-outline</v-icon>
-        </v-btn>
-        <v-btn id="close" color="red" icon tile @click="window_close()">
-          <v-icon small>mdi-close</v-icon>
-        </v-btn>
+          </v-btn>
+          <v-btn id="box" icon tile @click="change()">
+            <v-icon v-if="maximized" small>mdi-checkbox-multiple-blank-outline</v-icon>
+            <v-icon v-else small>mdi-checkbox-blank-outline</v-icon>
+          </v-btn>
+          <v-btn id="close" color="red" icon tile @click="window_close()">
+            <v-icon small>mdi-close</v-icon>
+          </v-btn>
+        </span>
+        </div>
       </v-system-bar>
     </div>
     <!-- app 바 영역 -->
-    <v-app-bar dark max-height="48" color="primary" dense>
+    <div>
+      <v-app-bar app dark max-height="48" color="primary" dense>
 
       <!-- 메뉴열기 -->
       <v-app-bar-nav-icon @click="drawer = true" />
 
-      <v-toolbar-title @click="$router.push({ name: 'Home'})" style="width:300px">
-        <span class=""><strong>checkIN</strong></span>
-      </v-toolbar-title>
-
-      <!-- 검색창 -->
-      <v-text-field
-        flat
-        rounded
-        dense
-        solo-inverted
-        hide-details
-        prepend-inner-icon="mdi-magnify"
-        label="Search"
-        class="hidden-sm-and-down"
-        color="blue"
-      />
       <v-spacer />
 
       <!-- 상단 우측 아이콘 -->
@@ -83,10 +91,9 @@
         <v-icon color="white">mdi-heart</v-icon>
       </v-btn>
 
-      <edit/>
-      <profile/>
 
     </v-app-bar>
+    </div>
 
     <!-- 컨텐츠 탈부착 영역 -->
     <v-content>
@@ -180,11 +187,17 @@ export default {
   background-color: #202B43;
 }
 #header {
-  -webkit-app-region: drag
+  -webkit-app-region: drag;
 }
 #minus {
   -webkit-app-region: no-drag
-  
+}
+#profile {
+  -webkit-app-region: no-drag
+}
+#search {
+  -webkit-user-select: auto;
+  -webkit-app-region: no-drag;
 }
 #box {
   -webkit-app-region: no-drag

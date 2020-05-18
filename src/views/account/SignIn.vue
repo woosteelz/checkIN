@@ -7,36 +7,43 @@
             <v-toolbar-title>Check in</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
-          <div class="pa-3">
-            <VTextFieldWithValidation color="blue" rules="required|email" v-model="agentID" label="ID" placeholder="Please enter your Email"/>
-            <VTextFieldWithValidation color="blue" rules="required" v-model="agentPW" label="Password" placeholder="Please enter your Password" type="password"/>
-            <v-btn
-              @click="signIn({agentID, agentPW, jwt, uuid, result})" color="#43A047" block depressed large
-            >
-              Check in
-            </v-btn>
-            <div class="my-5">
-              <v-divider />
-            </div>
-            <div class="my-2">
+          <div class="px-3 pt-3">
+            <form>
+              <ValidationProvider name="email" rules="required|email" v-slot="{ errors, valid }">
+                <v-text-field
+                  color="blue"
+                  v-model="agentID"
+                  label="ID"
+                  :error-messages="errors"
+                  :success="valid"
+                  placeholder="Please enter your Email"
+                >
+                </v-text-field>
+              </ValidationProvider>
+              <ValidationProvider name="password" rules="required" v-slot="{ errors, valid }">
+                <v-text-field
+                  color="blue"
+                  v-model="agentPW"
+                  label="Password"
+                  type="password"
+                  :error-messages="errors"
+                  :success="valid"
+                  placeholder="Please enter your Password"
+                >
+                </v-text-field>
+              </ValidationProvider>
+            </form>
+
+            <div class="my-2" style="grid-column-gap:10%">
               <v-btn
-                @click="$router.push({ name: 'SignUp' })"
-                color="gray-lighten-5"
-                block
-                depressed
-                large
-                >Create Account</v-btn
+                @click="signIn({agentID, agentPW, jwt, uuid, result})" color="#43A047" depressed large block
               >
+                로그인
+              </v-btn>
             </div>
-            <div class="my-2">
-              <v-btn
-                @click="$router.push({ name: 'FindPassword' })"
-                color="gray-lighten-5"
-                block
-                depressed
-                large
-                >Find Password</v-btn
-              >
+            <v-divider class="mt-4"/>
+            <div class="d-flex justify-center">
+              <v-breadcrumbs :items="items"></v-breadcrumbs>
             </div>
           </div>
         </v-card>
@@ -49,6 +56,7 @@
 import axios from "axios";
 import { mapActions } from "vuex";
 import VTextFieldWithValidation from '@/components/inputs/VTextFieldWithValidation';
+import { ValidationProvider } from "vee-validate";
 
 export default {
   data() {
@@ -57,11 +65,29 @@ export default {
       agentID: '',
       agentPW: '',
       uuid: null,
-      result: null
+      result: null,
+      items: [
+        {
+          text: '비밀번호 찾기',
+          disabled: false,
+          to: 'FindPassword',
+        },
+        {
+          text: '회원가입',
+          disabled: false,
+          to: 'SignUp',
+        },
+        {
+          text: '일회용 로그인',
+          disabled: false,
+          to: 'OnetimeLogin',
+        },
+      ],
     }
   },
   components: {
-    VTextFieldWithValidation
+    VTextFieldWithValidation,
+    ValidationProvider
   },
   methods: {
     ...mapActions(["signIn"])

@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-y bottom left close-on-click>
     <template v-slot:activator="{ on }">
-      <v-btn v-if="userInfo.flag.isSignedIn" tile dark icon v-on="on">
+      <v-btn large v-if="userInfo.flag.isSignedIn" tile dark icon v-on="on">
         <v-icon large color="blue lighten-2">mdi-account-circle</v-icon>
       </v-btn>
 
