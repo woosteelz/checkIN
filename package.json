@@ -30,6 +30,7 @@
     "electron": "^6.0.0",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
+    "selenium-webdriver": "^4.0.0-alpha.7",
     "vue-cli-plugin-electron-builder": "~1.4.5",
     "vue-cli-plugin-vuetify": "~2.0.5",
     "vue-template-compiler": "^2.6.11",

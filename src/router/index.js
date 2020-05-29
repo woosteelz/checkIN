@@ -1,63 +1,68 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes: [
     {
-      name: 'Home',
-      path: '/',
-      component: () => import('@/views/Home'),
+      name: "Home",
+      path: "/",
+      component: () => import("@/views/Home"),
     },
     {
-      name: 'MainPage',
-      path: '/MainPage',
-      component: () =>import('@/views/MainPage.vue')
+      name: "MainPage",
+      path: "/MainPage",
+      component: () => import("@/views/MainPage.vue"),
     },
     {
-      name: 'SignIn',
-      path: '/signin',
-      component: () => import('@/views/account/SignIn'),
+      name: "SignIn",
+      path: "/signin",
+      component: () => import("@/views/account/SignIn"),
     },
     {
-      name: 'SignUp',
-      path: '/signup',
-      component: () => import('@/views/account/SignUp'),
+      name: "OneTimeLogin",
+      path: "/onetimelogin",
+      component: () => import("@/views/account/OneTimeLogin"),
     },
     {
-      name: 'FindPassword',
-      path: '/findpassword',
-      component: () => import('@/views/account/FindPassword'),
+      name: "SignUp",
+      path: "/signup",
+      component: () => import("@/views/account/SignUp"),
     },
     {
-      name: 'MyAccount',
-      path: '/myaccount',
-      component: () => import('@/views/account/MyAccount'),
+      name: "FindPassword",
+      path: "/findpassword",
+      component: () => import("@/views/account/FindPassword"),
+    },
+    {
+      name: "MyAccount",
+      path: "/myaccount",
+      component: () => import("@/views/account/MyAccount"),
       children: [
         {
-          name: 'EditProfile',
-          path: 'editProfile',
-          component: () => import('@/views/account/accountSub/EditProfile')
+          name: "EditProfile",
+          path: "editProfile",
+          component: () => import("@/views/account/accountSub/EditProfile"),
         },
         {
-          name: 'ChangePassword',
-          path: 'changepassword',
-          component: () => import('@/views/account/accountSub/ChangePassword')
+          name: "ChangePassword",
+          path: "changepassword",
+          component: () => import("@/views/account/accountSub/ChangePassword"),
         },
         {
-          name: 'Config',
-          path: 'config',
-          component: () => import('@/views/account/accountSub/Config')
+          name: "Config",
+          path: "config",
+          component: () => import("@/views/account/accountSub/Config"),
         },
         {
-          name: 'NewPassword',
-          path: 'newpassword',
-          component: () => import('@/views/account/accountSub/NewPassword')
+          name: "NewPassword",
+          path: "newpassword",
+          component: () => import("@/views/account/accountSub/NewPassword"),
         },
-      ]
+      ],
     },
   ],
-})
+});
