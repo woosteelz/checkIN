@@ -23,6 +23,11 @@ export default new Router({
       component: () => import("@/views/account/SignIn"),
     },
     {
+      name: "OTP",
+      path: "/otp",
+      component: () => import("@/views/account/OTP"),
+    },
+    {
       name: "OneTimeLogin",
       path: "/onetimelogin",
       component: () => import("@/views/account/OneTimeLogin"),

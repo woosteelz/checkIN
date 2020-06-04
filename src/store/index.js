@@ -1,12 +1,12 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import axios from 'axios'
-import router from '@/router/index'
-import { validate } from 'vee-validate';
+import Vue from "vue";
+import Vuex from "vuex";
+import axios from "axios";
+import router from "@/router/index";
+import { validate } from "vee-validate";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-const USER_INFO = () => { 
+const USER_INFO = () => {
   return {
     agentID: null,
     agentPW: null,
@@ -14,14 +14,13 @@ const USER_INFO = () => {
     errorCount: null,
     numberOfDevice: null,
     JWT: null,
-    siteInfo: [
-    ],
+    siteInfo: [],
     flag: {
       isSignedIn: false,
       isSignedInError: false,
-    }
-  }
-}
+    },
+  };
+};
 
 export default new Vuex.Store({
   state: {
@@ -31,7 +30,7 @@ export default new Vuex.Store({
       name: null,
       agentPW: null,
       confirmPW: null,
-      step: 1
+      step: 1,
     },
     userInfo: {
       agentID: null,
@@ -42,49 +41,48 @@ export default new Vuex.Store({
       JWT: null,
       siteInfo: [
         {
-          name: 'Google',
-          url: 'https://www.google.com/',
-          id: '',
-          password: '',
+          name: "Google",
+          url: "https://www.google.com/",
+          id: "",
+          password: "",
         },
         {
-          name: 'Naver',
-          url: 'https://nid.naver.com/',
-          id: '',
-          password: '',
+          name: "Naver",
+          url: "https://nid.naver.com/",
+          id: "",
+          password: "",
         },
         {
-          name: 'Kakao',
-          url: 'https://www.kakao.com/',
-          id: '',
-          password: '',
+          name: "Kakao",
+          url: "https://www.kakao.com/",
+          id: "",
+          password: "",
         },
         {
-          name: 'SMU',
-          url: 'https://www.smu.ac.kr/',
-          id: '',
-          password: '',
+          name: "SMU",
+          url: "https://www.smu.ac.kr/",
+          id: "",
+          password: "",
         },
         {
-          name: 'Interpark',
-          url: 'https://www.interpark.com/',
-          id: '',
-          password: '',
-        }
+          name: "Interpark",
+          url: "https://www.interpark.com/",
+          id: "",
+          password: "",
+        },
       ],
       flag: {
         isSignedIn: false,
         isSignedInError: false,
-      }
+      },
     },
     isDuplicated: false,
     hasFormError: false,
     verifySuccess: false,
     codeMatchError: false,
-    codeMatchSuccess: false
+    codeMatchSuccess: false,
   },
-  getters: {
-  },
+  getters: {},
   mutations: {
     init(state) {
       state.hasFormError = false;
@@ -113,87 +111,90 @@ export default new Vuex.Store({
       state.codeMatchSuccess = true;
     },
 
-    signUp(){
-
-    },
+    signUp() {},
     // Sigin In 성공
     signInSuccess(state, payload) {
-      state.userInfo.flag.isSignedIn = true
-      state.userInfo.flag.isSignedInError = false
-      state.userInfo.agentID = payload.data.agentID
+      state.userInfo.flag.isSignedIn = true;
+      state.userInfo.flag.isSignedInError = false;
+      state.userInfo.agentID = payload.data.agentID;
       state.userInfo.JWT = payload.data.jwt;
     },
     signInFail(state) {
-      state.userInfo.flag.isSignedIn = false
-      state.userInfo.flag.isSignedInError = true   
+      state.userInfo.flag.isSignedIn = false;
+      state.userInfo.flag.isSignedInError = true;
     },
     signOut(state) {
-      state.userInfo = USER_INFO()
-    }
+      state.userInfo = USER_INFO();
+    },
   },
   actions: {
-    verifyEmail ( { commit } , agentAccountDTO ) {
-      if(!agentAccountDTO.agentID) {
-        commit("hasFormError")
-        return false
+    verifyEmail({ commit }, agentAccountDTO) {
+      if (!agentAccountDTO.agentID) {
+        commit("hasFormError");
+        return false;
       }
-      axios.post("https://54.180.153.254/checkIN/signUp/verifyEmail", agentAccountDTO)
+      axios
+        .post(
+          "https://54.180.153.254/checkIN/signUp/verifyEmail",
+          agentAccountDTO
+        )
 
         .then((res) => {
           res.data.result === true
-          ? commit("verifyEmailSuccess")
-          : commit("isDuplicated")
+            ? commit("verifyEmailSuccess")
+            : commit("isDuplicated");
         })
         .catch((err) => {
           console.log(err);
         });
     },
 
-    confirmCode ({ state, commit }, verify_code) {
-      if(verify_code !== state.forSignUp.verify_code) {
-        commit("rejectConfirmCode")
-        return false
+    confirmCode({ state, commit }, verify_code) {
+      if (verify_code !== state.forSignUp.verify_code) {
+        commit("rejectConfirmCode");
+        return false;
       }
-      commit("ConfirmCode")
+      commit("ConfirmCode");
     },
 
-    signUp( { state, commit }, agentAccountDTO ) {
-      router.push({ name: 'SignIn' })
+    signUp({ state, commit }, agentAccountDTO) {
+      router.push({ name: "SignIn" });
     },
 
-    signIn( { state, commit }, loginObj) {
-      if(!loginObj.agentID || !loginObj.agentPW) {
+    signIn({ state, commit }, loginObj) {
+      if (!loginObj.agentID || !loginObj.agentPW) {
         alert("이메일 및 비밀번호를 확인하세욧!");
-        return false
+        return false;
       }
-      axios.post('https://54.180.153.254/checkIN/signIn', loginObj)
+      axios
+        .post("https://54.180.153.254/checkIN/signIn", loginObj)
 
         .then((res) => {
-          if(res.data.result === true){
-            commit("signInSuccess", res)
-            
-            const loginData = { 
+          if (res.data.result === true) {
+            commit("signInSuccess", res);
+
+            const loginData = {
               agentID: state.userInfo.agentID,
-              jwt: state.userInfo.JWT
-            }
+              jwt: state.userInfo.JWT,
+            };
 
             // 로그인 후 사이트 정보 불러오기
-            axios.post('https://54.180.153.254/checkIN/siteRead', loginData)
+            axios
+              .post("https://54.180.153.254/checkIN/siteRead", loginData)
               .then((result) => {
-                if(result.data.result === true){
+                if (result.data.result === true) {
                   //commit("loadSiteInfo", result.data.siteInfo)
-                  for(var i = 0; i < result.data.list.length; i++){
+                  for (var i = 0; i < result.data.list.length; i++) {
                     console.log(result.data.list[i]);
                   }
+                } else {
+                  alert("사이트 정보 불러오기 실패!");
                 }
-                else{
-                  alert("사이트 정보 불러오기 실패!")
-                }
-                router.push({ name: 'MainPage' })
-            })
-          }
-          else{
-            commit("signInFail")
+                router.push({ name: "OTP" });
+                // router.push({ name: "MainPage" });
+              });
+          } else {
+            commit("signInFail");
           }
         })
         .catch((err) => {
@@ -201,31 +202,32 @@ export default new Vuex.Store({
         });
     },
 
-    signOut( {state, commit} ) {
-
-      const logoutData = { 
+    signOut({ state, commit }) {
+      const logoutData = {
         agentID: state.userInfo.agentID,
-        jwt: state.userInfo.JWT
-      }
+        jwt: state.userInfo.JWT,
+      };
 
-      axios.post("https://54.180.153.254/checkIN/signOut", logoutData)
-      .then((res) => {
-        res.data.result === true
-        ? (commit("signOut") && $router.push({name: "SignIn"}))
-        : alert("로그아웃 실패")
-      })
+      axios
+        .post("https://54.180.153.254/checkIN/signOut", logoutData)
+        .then((res) => {
+          res.data.result === true
+            ? commit("signOut") && $router.push({ name: "SignIn" })
+            : alert("로그아웃 실패");
+        });
+      router.push({ name: "SignIn" });
     },
 
-    addSite( { commit }, siteInfo ) {
-
-      axios.post("http://18.218.11.150:8080/checkIN/signOut", state.userInfo.agentID)
-      .then((res) => {
-        res.data.result === true
-        ? (commit("signOut"))
-        : alert("로그아웃 실패")
-      })
-    }
+    addSite({ commit }, siteInfo) {
+      axios
+        .post(
+          "http://18.218.11.150:8080/checkIN/signOut",
+          state.userInfo.agentID
+        )
+        .then((res) => {
+          res.data.result === true ? commit("signOut") : alert("로그아웃 실패");
+        });
+    },
   },
-  modules: {
-  }
-})
+  modules: {},
+});
