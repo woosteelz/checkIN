@@ -1,6 +1,5 @@
 <template>
-  <v-app> 
-
+  <v-app>
     <!-- 네비게이션 드로어 영역-->
     <v-navigation-drawer v-model="drawer" absolute temporary>
       <v-list nav dense class="py-0">
@@ -39,11 +38,14 @@
     </v-navigation-drawer>
 
     <div class="d-flex" id="header">
-      <v-system-bar class="justify-space-between" app dark height="48" >
-        <v-toolbar-title @click="$router.push({ name: 'Home'})" style="width:300px">
+      <v-system-bar class="justify-space-between" app dark height="48">
+        <v-toolbar-title
+          @click="$router.push({ name: 'SignIn' })"
+          style="width:300px"
+        >
           <span class="ml-4"><strong>checkIN</strong></span>
         </v-toolbar-title>
-          <!-- 검색창 -->
+        <!-- 검색창 -->
         <span id="search" width="150">
           <v-text-field
             flat
@@ -58,54 +60,49 @@
           />
         </span>
         <div>
-        <span id="profile" class="mr-4">
-          <edit class="mx-4"/>
-          <profile/>
-        </span>
-        <span>
-          <v-btn id="minus" icon tile @click="window_minimize()">
-          <v-icon small>mdi-minus</v-icon>
-          </v-btn>
-          <v-btn id="box" icon tile @click="change()">
-            <v-icon v-if="maximized" small>mdi-checkbox-multiple-blank-outline</v-icon>
-            <v-icon v-else small>mdi-checkbox-blank-outline</v-icon>
-          </v-btn>
-          <v-btn id="close" color="red" icon tile @click="window_close()">
-            <v-icon small>mdi-close</v-icon>
-          </v-btn>
-        </span>
+          <span id="profile" class="mr-4">
+            <edit class="mx-4" />
+            <profile />
+          </span>
+          <span>
+            <v-btn id="minus" icon tile @click="window_minimize()">
+              <v-icon small>mdi-minus</v-icon>
+            </v-btn>
+            <v-btn id="box" icon tile @click="change()">
+              <v-icon v-if="maximized" small
+                >mdi-checkbox-multiple-blank-outline</v-icon
+              >
+              <v-icon v-else small>mdi-checkbox-blank-outline</v-icon>
+            </v-btn>
+            <v-btn id="close" color="red" icon tile @click="window_close()">
+              <v-icon small>mdi-close</v-icon>
+            </v-btn>
+          </span>
         </div>
       </v-system-bar>
     </div>
     <!-- app 바 영역 -->
     <div>
       <v-app-bar app dark max-height="48" color="primary" dense>
+        <!-- 메뉴열기 -->
+        <v-app-bar-nav-icon @click="drawer = true" />
 
-      <!-- 메뉴열기 -->
-      <v-app-bar-nav-icon @click="drawer = true" />
+        <v-spacer />
 
-      <v-spacer />
-
-      <!-- 상단 우측 아이콘 -->
-      <v-btn icon tile color="red">
-        <v-icon color="white">mdi-heart</v-icon>
-      </v-btn>
-
-
-    </v-app-bar>
+        <!-- 상단 우측 아이콘 -->
+        <v-btn icon tile color="red">
+          <v-icon color="white">mdi-heart</v-icon>
+        </v-btn>
+      </v-app-bar>
     </div>
 
     <!-- 컨텐츠 탈부착 영역 -->
     <v-content>
-      <router-view/>
+      <router-view />
     </v-content>
 
     <!-- app Footer -->
-    <v-footer
-    color="secondary"
-    dark
-    padless
-    >
+    <v-footer color="secondary" dark padless>
       <v-btn
         v-for="link in links"
         :key="link"
@@ -116,21 +113,21 @@
       >
         {{ link }}
       </v-btn>
-      <v-spacer/>
+      <v-spacer />
       <strong class="mr-5">Copyright by checkIN service team</strong>
-  </v-footer>
+    </v-footer>
   </v-app>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
-import Profile from "@/components/Profile"
-import Edit from "@/components/Edit"
+import Profile from "@/components/Profile";
+import Edit from "@/components/Edit";
 
 export default {
   components: {
-    "profile": Profile,
-    "edit": Edit
+    profile: Profile,
+    edit: Edit,
   },
   data: () => ({
     group: "",
@@ -139,71 +136,66 @@ export default {
       { title: "Click Me" },
       { title: "Click Me" },
       { title: "Click Me" },
-      { title: "Click Me 2" }
+      { title: "Click Me 2" },
     ],
-    links: [
-        'About Us',
-        'Team',
-        'Contact Us',
-      ],
-      maximized: false
+    links: ["About Us", "Team", "Contact Us"],
+    maximized: false,
   }),
   computed: {
-    ...mapState(['userInfo'])
+    ...mapState(["userInfo"]),
   },
   methods: {
     ...mapActions(["signIn, signOut"]),
     window_close() {
-      const remote=require('electron').remote
-      const currentWindow = remote.getCurrentWindow()
-      currentWindow.close()
+      const remote = require("electron").remote;
+      const currentWindow = remote.getCurrentWindow();
+      currentWindow.close();
     },
     window_minimize() {
-      const remote=require('electron').remote
-      const currentWindow = remote.getCurrentWindow()
-      currentWindow.minimize()
+      const remote = require("electron").remote;
+      const currentWindow = remote.getCurrentWindow();
+      currentWindow.minimize();
     },
     change() {
-      const remote=require('electron').remote
-      const currentWindow = remote.getCurrentWindow()
-      if(this.maximized === false) {
-        this.maximized = true
-        currentWindow.maximize()
+      const remote = require("electron").remote;
+      const currentWindow = remote.getCurrentWindow();
+      if (this.maximized === false) {
+        this.maximized = true;
+        currentWindow.maximize();
+      } else {
+        this.maximized = false;
+        currentWindow.unmaximize();
       }
-      else{
-        this.maximized = false
-        currentWindow.unmaximize()
-      }
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
 #app {
-  background-color: #202B43;
+  background-color: #202b43;
 }
 #myAccount {
-  background-color: #202B43;
+  background-color: #202b43;
 }
 #header {
   -webkit-app-region: drag;
 }
 #minus {
-  -webkit-app-region: no-drag
+  -webkit-app-region: no-drag;
 }
 #profile {
-  -webkit-app-region: no-drag
+  -webkit-app-region: no-drag;
 }
 #search {
   -webkit-user-select: auto;
   -webkit-app-region: no-drag;
 }
 #box {
-  -webkit-app-region: no-drag
+  -webkit-app-region: no-drag;
 }
 #close {
-  -webkit-app-region: no-drag
+  -webkit-app-region: no-drag;
 }
 #minus:hover {
   background: grey;
@@ -217,5 +209,4 @@ export default {
   background: red;
   opacity: 0.9;
 }
-
 </style>

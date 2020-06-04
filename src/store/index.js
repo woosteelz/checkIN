@@ -14,7 +14,8 @@ const USER_INFO = () => {
     errorCount: null,
     numberOfDevice: null,
     JWT: null,
-    siteInfo: [],
+    siteInfo: [
+    ],
     flag: {
       isSignedIn: false,
       isSignedInError: false,
@@ -39,7 +40,38 @@ export default new Vuex.Store({
       errorCount: null,
       numberOfDevice: null,
       JWT: null,
-      siteInfo: [],
+      siteInfo: [
+        {
+          name: 'Google',
+          url: 'https://www.google.com/',
+          id: '',
+          password: '',
+        },
+        {
+          name: 'Naver',
+          url: 'https://nid.naver.com/',
+          id: '',
+          password: '',
+        },
+        {
+          name: 'Kakao',
+          url: 'https://www.kakao.com/',
+          id: '',
+          password: '',
+        },
+        {
+          name: 'SMU',
+          url: 'https://www.smu.ac.kr/',
+          id: '',
+          password: '',
+        },
+        {
+          name: 'Interpark',
+          url: 'https://www.interpark.com/',
+          id: '',
+          password: '',
+        }
+      ],
       flag: {
         isSignedIn: false,
         isSignedInError: false,
@@ -52,7 +84,6 @@ export default new Vuex.Store({
     codeMatchSuccess: false
   },
   getters: {
-
   },
   mutations: {
     init(state) {
@@ -101,7 +132,6 @@ export default new Vuex.Store({
     }
   },
   actions: {
-
     verifyEmail ( { commit } , agentAccountDTO ) {
       if(!agentAccountDTO.agentID) {
         commit("hasFormError")
@@ -146,21 +176,21 @@ export default new Vuex.Store({
               agentID: state.userInfo.agentID,
               jwt: state.userInfo.JWT
             }
+
             // 로그인 후 사이트 정보 불러오기
             axios.post('https://54.180.153.254/checkIN/siteRead', loginData)
               .then((result) => {
                 if(result.data.result === true){
+                  //commit("loadSiteInfo", result.data.siteInfo)
                   for(var i = 0; i < result.data.list.length; i++){
-                    state.userInfo.siteInfo[i] = result.data.list[i];
-                    console.log(state.userInfo.siteInfo[i]);
+                    console.log(result.data.list[i]);
                   }
                 }
                 else{
                   alert("사이트 정보 불러오기 실패!")
                 }
+                router.push({ name: 'MainPage' })
             })
-
-            router.push({ name: 'MainPage' })
           }
           else{
             commit("signInFail")
