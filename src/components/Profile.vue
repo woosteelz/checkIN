@@ -32,14 +32,14 @@
       <v-divider></v-divider>
 
       <v-list-item-group active-class="deep-purple--text text--accent-4">
-        <v-list-item router :to="{ name: 'Home' }" exact>
+        <v-list-item router :to="{ name: 'MainPage' }" exact>
           <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Home</v-list-item-title>
         </v-list-item>
 
-        <v-list-item router :to="{ name: 'SignIn' }" exact>
+        <v-list-item router :to="{ name: 'MyAccount' }" exact>
           <v-list-item-icon>
             <v-icon>mdi-account</v-icon>
           </v-list-item-icon>
@@ -61,10 +61,10 @@
 import { mapState, mapActions } from "vuex";
 export default {
   computed: {
-    ...mapState(["userInfo"])
+    ...mapState(["userInfo"]),
   },
   methods: {
-    ...mapActions(["signOut"])
-  }
+    ...mapActions(["signOut"]),
+  },
 };
 </script>

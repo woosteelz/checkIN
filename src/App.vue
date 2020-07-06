@@ -5,7 +5,7 @@
       <v-list nav dense class="py-0">
         <v-list-item two-line>
           <v-list-item-avatar>
-            <img src="" />
+            <img src />
           </v-list-item-avatar>
 
           <v-list-item-content>
@@ -38,12 +38,20 @@
     </v-navigation-drawer>
 
     <div class="d-flex" id="header">
-      <v-system-bar class="justify-space-between" app dark height="48">
+      <v-system-bar
+        id="systembar"
+        class="justify-space-between"
+        app
+        dark
+        height="48"
+      >
         <v-toolbar-title
           @click="$router.push({ name: 'SignIn' })"
           style="width:300px"
         >
-          <span class="ml-4"><strong>checkIN</strong></span>
+          <span class="ml-4">
+            <strong>checkIN</strong>
+          </span>
         </v-toolbar-title>
         <!-- 검색창 -->
         <span id="search" width="150">
@@ -83,7 +91,14 @@
     </div>
     <!-- app 바 영역 -->
     <div>
-      <v-app-bar app dark max-height="48" color="primary" dense>
+      <v-app-bar
+        style="positon: relative"
+        app
+        dark
+        max-height="48"
+        color="primary"
+        dense
+      >
         <!-- 메뉴열기 -->
         <v-app-bar-nav-icon @click="drawer = true" />
 
@@ -110,9 +125,8 @@
         text
         rounded
         class="my-2"
+        >{{ link }}</v-btn
       >
-        {{ link }}
-      </v-btn>
       <v-spacer />
       <strong class="mr-5">Copyright by checkIN service team</strong>
     </v-footer>
@@ -123,6 +137,7 @@
 import { mapState, mapActions } from "vuex";
 import Profile from "@/components/Profile";
 import Edit from "@/components/Edit";
+import amqp from "amqplib/callback_api";
 
 export default {
   components: {
@@ -130,6 +145,8 @@ export default {
     edit: Edit,
   },
   data: () => ({
+    logOut: "false",
+    state: "signIn",
     group: "",
     drawer: false,
     items: [
@@ -144,8 +161,47 @@ export default {
   computed: {
     ...mapState(["userInfo"]),
   },
+  watch: {
+    logOut: () => {
+      this.getState();
+    },
+  },
   methods: {
     ...mapActions(["signIn, signOut"]),
+    getState() {
+      const url = "amqp://54.180.253.154:5672";
+      const queueName = "msg_queue";
+
+      amqp.connect(url, function(error, connect) {
+        if (error) {
+          console.log(error);
+          return;
+        }
+        connect.createChannel(function(error, channel) {
+          if (error) {
+            console.log(error);
+            return;
+          }
+          channel.assertQueue(queueName, { durable: true }, function(error) {
+            let recevieMessage = function() {
+              channel.get(queueName, {}, function(error, message) {
+                if (error) {
+                  console.log(error);
+                } else if (message) {
+                  console.log(message.content.toString());
+                  channel.ack(message);
+                  setTimeout(recevieMessage, 1000);
+                } else {
+                  this.logOut = "NO MESSAGE";
+                  setTimeout(recevieMessage, 1000);
+                }
+              });
+            };
+            recevieMessage();
+          });
+        });
+      });
+    },
     window_close() {
       const remote = require("electron").remote;
       const currentWindow = remote.getCurrentWindow();
@@ -179,6 +235,9 @@ export default {
   background-color: #202b43;
 }
 #header {
+  -webkit-app-region: drag;
+}
+#systembar {
   -webkit-app-region: drag;
 }
 #minus {

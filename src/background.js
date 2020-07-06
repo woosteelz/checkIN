@@ -12,11 +12,11 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 let win
 app.commandLine.appendSwitch('ignore-certificate-errors');
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }])
-function createWindow () {
+protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
+function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({ 
-    width: 800, height: 600, 
+  win = new BrowserWindow({
+    minWidth: 1024, minHeight: 768,
     webPreferences: {
       nodeIntegration: true
     },

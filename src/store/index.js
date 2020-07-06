@@ -3,8 +3,12 @@ import Vuex from "vuex";
 import axios from "axios";
 import router from "@/router/index";
 import { validate } from "vee-validate";
+import amqp from "amqplib/callback_api"
 
 Vue.use(Vuex);
+
+const url = "amqp://pushService:kfc0409@54.180.153.254:5672/pushHost";
+const queueName = "msg_queue";
 
 const USER_INFO = () => {
   return {
@@ -111,7 +115,7 @@ export default new Vuex.Store({
       state.codeMatchSuccess = true;
     },
 
-    signUp() {},
+    signUp() { },
     // Sigin In 성공
     signInSuccess(state, payload) {
       state.userInfo.flag.isSignedIn = true;
@@ -161,7 +165,7 @@ export default new Vuex.Store({
       router.push({ name: "SignIn" });
     },
 
-    signIn({ state, commit }, loginObj) {
+    signIn({ state, commit, dispatch }, loginObj) {
       if (!loginObj.agentID || !loginObj.agentPW) {
         alert("이메일 및 비밀번호를 확인하세욧!");
         return false;
@@ -190,6 +194,56 @@ export default new Vuex.Store({
                 } else {
                   alert("사이트 정보 불러오기 실패!");
                 }
+                var args = process.argv.slice(2);
+                if (args.length == 0) {
+                  console.log("Usage: receive_logs_direct.js [info] [warning] [error]");
+                  process.exit(1);
+                }
+
+                amqp.connect(url, function (error, connect) {
+                  if (error) {
+                    console.log(error);
+                    return;
+                  }
+                  connect.createChannel(function (error, channel) {
+                    if (error) {
+                      console.log(error);
+                      return;
+                    }
+                    var exchange = "amq.direct";
+
+                    channel.bindQueue(queueName, exchange, state.userInfo.agentID);
+                    channel.assertQueue(queueName, { durable: false, autoDelete: true }, function (error) {
+                      let recevieMessage = function () {
+                        channel.get(queueName, {}, function (error, message) {
+                          if (error) {
+                            console.log(error);
+                          }
+                          else if (message) {
+                            console.log(message.content.toString())
+                            if (message.content.toString() == "remote sign out") {
+                              dispatch("signOut", state)
+                              channel.ack(message);
+                              console.log("[info] Message dequeued")
+                              console.log("[info] Connection terminated")
+                              return
+                            }
+                            setTimeout(recevieMessage, 1000);
+                          }
+                          else {
+                            console.log('Connected!');
+                            if (state.userInfo.flag.isSignedIn == false) {
+                              console.log("[info] Connection terminated")
+                              return
+                            }
+                            setTimeout(recevieMessage, 1000);
+                          }
+                        });
+                      }
+                      recevieMessage();
+                    });
+                  });
+                });
                 router.push({ name: "OTP" });
                 // router.push({ name: "MainPage" });
               });
