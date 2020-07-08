@@ -6,7 +6,7 @@
         <div class="ma-3">
           <div class="ma-3">
             <span class="text-center and white--text">
-              <h2><strong>비밀번호 찾기</strong></h2>
+              <h2><strong>비밀번호 변경</strong></h2>
               <br />
             </span>
             <ValidationObserver v-slot="{ invalid }">
@@ -22,7 +22,7 @@
                     label="ID"
                     :error-messages="errors"
                     :success="valid"
-                    placeholder="Please enter your Email"
+                    placeholder="가입시 입력했던 이메일을 입력해 주세요"
                     filled
                   >
                     <template #append>
@@ -32,7 +32,7 @@
                         color="blue"
                         class="ma-0"
                         @click="
-                          verifyEmail({
+                          reVerifyEmail({
                             agentID,
                             agentPW,
                             name,
@@ -52,31 +52,24 @@
                   rules="required"
                   v-model="confirmCode"
                   label="Confirmation Code"
-                  placeholder="Please enter your Confirmation Code"
+                  placeholder="이메일로 전송된 확인 코드를 입력해주세요"
                 />
                 <VTextFieldWithValidation
                   vid="agentPW"
                   color="blue"
                   rules="required|password|min:6"
                   v-model="agentPW"
-                  label="Password"
+                  label="New Password"
                   type="password"
-                  placeholder="Please enter your Password"
+                  placeholder="새로운 비밀번호를 입력해주세요"
                 />
                 <VTextFieldWithValidation
                   color="blue"
                   rules="required|confirmed:agentPW"
                   v-model="confirmPassword"
-                  label="Password Confirmation"
+                  label="New Password Confirmation"
                   type="password"
-                  placeholder="Please enter your Confirm Password"
-                />
-                <VTextFieldWithValidation
-                  color="blue"
-                  rules="required"
-                  v-model="name"
-                  label="name"
-                  placeholder="Please enter your name"
+                  placeholder="새로운 비밀번호를 다시 입력해 주세요"
                 />
                 <div class="ma-3">
                   <v-divider dark style="grey" />
@@ -97,18 +90,15 @@
                     depressed
                     :disabled="invalid"
                     @click="
-                      signUp({
+                      changePassword({
                         agentID,
                         agentPW,
                         confirmPassword,
                         confrimCode,
-                        name,
-                        errorCount,
-                        numberOfDevice,
                       })
                     "
                   >
-                    가입하기
+                    비밀번호 변경
                   </v-btn>
                 </div>
               </form>
@@ -139,11 +129,7 @@ export default {
     return {
       agentID: null,
       agentPW: null,
-      name: null,
-      errorCount: null,
-      numberOfDevice: null,
       confirmPassword: null,
-      agreement: false,
       confirmCode: null,
     };
   },
@@ -156,7 +142,7 @@ export default {
     ]),
   },
   methods: {
-    ...mapActions(["verifyEmail", "signUp"]),
+    ...mapActions(["reVerifyEmail", "changePassword"]),
   },
 };
 </script>

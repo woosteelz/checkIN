@@ -122,12 +122,46 @@ export default new Vuex.Store({
         });
     },
 
+    reVerifyEmail({ commit }, agentAccountDTO) {
+      if (!agentAccountDTO.agentID) {
+        commit("hasFormError");
+        return false;
+      }
+      axios
+        .post(
+          "https://54.180.153.254/checkIN/signUp/verifyCode",
+          agentAccountDTO
+        )
+
+        .then((res) => {
+          res.data.result === true
+            ? commit("verifyEmailSuccess")
+            : commit("isDuplicated");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
     confirmCode({ state, commit }, verify_code) {
       if (verify_code !== state.forSignUp.verify_code) {
         commit("rejectConfirmCode");
         return false;
       }
       commit("ConfirmCode");
+    },
+
+    changePassword({ state, commit }, changePasswordDTO) {
+      if (changePasswordDTO.agentID !== changePasswordDTO.confirmPassword) {
+        alert("다시 입력해주세요");
+      }
+      axios.post("URL", changePasswordDTO).then((res) => {
+        if (res === true) {
+          alert("비밀번호를 성공적으로 변경했습니다.");
+        } else {
+          alert("오류 발생! 다시 시도해주세요");
+        }
+      });
     },
 
     signUp({ state, commit }, agentAccountDTO) {
@@ -243,7 +277,15 @@ export default new Vuex.Store({
       });
     },
 
-    OTL({}) {},
+    OTL({ state, commit }, otl) {
+      axios.post("URL", otl).then((res) => {
+        if (res.data.result === true) {
+          $router.push({ name: "MainPage" });
+        } else {
+          alert("번호를 다시 확인해 주세요.");
+        }
+      });
+    },
 
     signOut({ state, commit }) {
       const logoutData = {

@@ -38,17 +38,7 @@
                   width="100"
                   depressed
                   :disabled="invalid"
-                  @click="
-                    signUp({
-                      agentID,
-                      agentPW,
-                      confirmPassword,
-                      confrimCode,
-                      name,
-                      errorCount,
-                      numberOfDevice,
-                    })
-                  "
+                  @click="OTL({ otl })"
                 >
                   로그인
                 </v-btn>
@@ -73,7 +63,10 @@ export default {
     ValidationProvider,
     ValidationObserver,
   },
+  methods: {
+    ...mapActions(["OTP"]),
+  },
 };
 </script>
 
-<style></style>>
+<style></style>
