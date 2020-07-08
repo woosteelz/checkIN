@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height style="max-width:450px" >
+  <v-container fill-height style="max-width:450px">
     <v-layout align-center row wrap>
       <v-flex xs12>
         <v-card>
@@ -9,7 +9,11 @@
           </v-toolbar>
           <div class="px-3 pt-3">
             <form>
-              <ValidationProvider name="email" rules="required|email" v-slot="{ errors, valid }">
+              <ValidationProvider
+                name="email"
+                rules="required|email"
+                v-slot="{ errors, valid }"
+              >
                 <v-text-field
                   color="blue"
                   v-model="agentID"
@@ -20,7 +24,11 @@
                 >
                 </v-text-field>
               </ValidationProvider>
-              <ValidationProvider name="password" rules="required" v-slot="{ errors, valid }">
+              <ValidationProvider
+                name="password"
+                rules="required"
+                v-slot="{ errors, valid }"
+              >
                 <v-text-field
                   color="blue"
                   v-model="agentPW"
@@ -36,12 +44,16 @@
 
             <div class="my-2" style="grid-column-gap:10%">
               <v-btn
-                @click="signIn({agentID, agentPW, jwt, uuid, result})" color="#43A047" depressed large block
+                @click="signIn({ agentID, agentPW, jwt, uuid, result })"
+                color="#43A047"
+                depressed
+                large
+                block
               >
                 로그인
               </v-btn>
             </div>
-            <v-divider class="mt-4"/>
+            <v-divider class="mt-4" />
             <div class="d-flex justify-center">
               <v-breadcrumbs :items="items"></v-breadcrumbs>
             </div>
@@ -55,43 +67,42 @@
 <script>
 import axios from "axios";
 import { mapActions } from "vuex";
-import VTextFieldWithValidation from '@/components/inputs/VTextFieldWithValidation';
+import VTextFieldWithValidation from "@/components/inputs/VTextFieldWithValidation";
 import { ValidationProvider } from "vee-validate";
 
 export default {
   data() {
     return {
       jwt: null,
-      agentID: '',
-      agentPW: '',
+      agentID: "",
+      agentPW: "",
       uuid: null,
       result: null,
       items: [
         {
-          text: '비밀번호 찾기',
+          text: "비밀번호 찾기",
           disabled: false,
-          to: 'FindPassword',
+          to: "FindPassword",
         },
         {
-          text: '회원가입',
+          text: "회원가입",
           disabled: false,
-          to: 'SignUp',
+          to: "SignUp",
         },
         {
-          text: '일회용 로그인',
+          text: "일회용 로그인",
           disabled: false,
-          to: 'OnetimeLogin',
+          to: "OnetimeLogin",
         },
       ],
-    }
+    };
   },
   components: {
     VTextFieldWithValidation,
-    ValidationProvider
+    ValidationProvider,
   },
   methods: {
-    ...mapActions(["signIn"])
-  }
-}
+    ...mapActions(["signIn"]),
+  },
+};
 </script>
-

@@ -16,7 +16,7 @@
               <v-text-field
                 type="password"
                 dark
-                v-model="otl"
+                v-model="otp"
                 :error-messages="errors"
                 :success="valid"
                 placeholder="일회용 로그인 번호"
@@ -29,7 +29,7 @@
                   width="100"
                   color="grey darken-1 and white--text"
                   depressed
-                  @click="$router.push({ name: 'SignIn' })"
+                  @click="signOut()"
                 >
                   취소
                 </v-btn>
@@ -53,15 +53,20 @@
 
 <script>
 import { ValidationProvider, ValidationObserver } from "vee-validate";
+import { mapActions } from "vuex";
+
 export default {
   data() {
     return {
-      otl: null,
+      otp: null,
     };
   },
   components: {
     ValidationProvider,
     ValidationObserver,
+  },
+  methods: {
+    ...mapActions(["OTP"]),
   },
 };
 </script>

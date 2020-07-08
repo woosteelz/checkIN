@@ -256,6 +256,20 @@ export default new Vuex.Store({
         });
     },
 
+    OTP({ }, otp) {
+      axios
+        .post("https://54.180.153.254/checkIN/otp", otp)
+        .then((res) => {
+          res.data.result === true
+            ? $router.push({ name: 'MainPage' })
+            : alert("OTP가 일치하지 않습니다.");
+        });
+    },
+
+    OTL({ },) {
+
+    },
+
     signOut({ state, commit }) {
       const logoutData = {
         agentID: state.userInfo.agentID,

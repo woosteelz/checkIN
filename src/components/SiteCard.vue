@@ -11,10 +11,10 @@
           >
             <div class="pt-4">
               <v-img
-                :src="`${userInfo.siteInfo[1].url}/favicon.ico`"
-                :lazy-src="`${userInfo.siteInfo[1].url}/favicon.ico`"
-                height="48"
-                width="48"
+                :src="`${userInfo.siteInfo[1].url}/favicon.png`"
+                :lazy-src="`${userInfo.siteInfo[1].url}/favicon.png`"
+                height="32px"
+                width="32px"
               />
             </div>
             <v-card-title

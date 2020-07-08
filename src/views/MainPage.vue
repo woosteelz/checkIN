@@ -51,22 +51,22 @@
                     class="ma-3"
                     :key="item.name"
                     v-show="!item.isConnected"
-                    height="120"
+                    height="110"
                     width="90"
                     @click="login(item.name)"
                   >
                     <div class="pt-4">
                       <v-img
                         :src="
-                          `http://www.google.com/s2/favicons?domain=${item.url}`
+                          `http://www.google.com/s2/favicons?sz=32&domain=${item.url}`
                         "
-                        height="48"
-                        width="48"
+                        height="32px"
+                        width="32px"
                       />
                     </div>
                     <v-card-title
                       style="max-width: 99px"
-                      class="d-inline-block text-truncate"
+                      class="px-1 d-inline-block text-truncate"
                     >
                       {{ item.name }}
                     </v-card-title>
