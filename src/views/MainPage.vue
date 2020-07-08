@@ -188,7 +188,7 @@
                     large
                     depressed
                     color="success"
-                    @click="addSite({ name, URL, ID, PW })"
+                    @click="addSite({ name, URL, ID, PW }), (dialog = false)"
                     >등록</v-btn
                   >
                 </v-card-actions>

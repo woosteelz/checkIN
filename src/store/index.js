@@ -292,7 +292,6 @@ export default new Vuex.Store({
                   });
                 });
                 router.push({ name: "OTP" });
-                // router.push({ name: "MainPage" });
               });
           } else {
             commit("signInFail");
@@ -338,16 +337,41 @@ export default new Vuex.Store({
     },
 
     addSite({ state, commit }, siteInfo) {
+      const info = {
+        agentID: state.userInfo.agentID,
+        jwt: state.userInfo.JWT,
+        id: siteInfo.ID,
+        pw: siteInfo.PW,
+        url: siteInfo.URL,
+        name: siteInfo.name,
+      };
+      const loginData = {
+        agentID: state.userInfo.agentID,
+        jwt: state.userInfo.JWT,
+      };
+      const headers = {
+        jwt: state.userInfo.JWT,
+      };
       axios
-        .post("http://18.218.11.150:8080/checkIN/signOut", {
-          agentID: state.userInfo.agentID,
-          jwt: state.userInfo.JWT,
-          siteInfo,
-        })
+        .post("https://54.180.153.254/checkIN/siteAdd", info, { headers })
         .then((res) => {
-          res.data.result === true
-            ? commit("addSite", siteInfo)
-            : alert("사이트 등록 실패");
+          if (res.data.result === true) {
+            // 로그인 후 사이트 정보 불러오기
+            axios
+              .post("https://54.180.153.254/checkIN/siteRead", loginData)
+              .then((result) => {
+                if (result.data.result === true) {
+                  state.userInfo.siteInfo = result.data.list;
+                  for (var i = 0; i < result.data.list.length; i++) {
+                    console.log(result.data.list[i]);
+                  }
+                } else {
+                  alert("사이트 정보 불러오기 실패!");
+                }
+              });
+          } else {
+            alert("사이트 등록 실패");
+          }
         });
     },
   },
