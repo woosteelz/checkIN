@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import axios from "axios";
 import router from "@/router/index";
 import { validate } from "vee-validate";
-import amqp from "amqplib/callback_api"
+import amqp from "amqplib/callback_api";
 
 Vue.use(Vuex);
 
@@ -43,38 +43,7 @@ export default new Vuex.Store({
       errorCount: null,
       numberOfDevice: null,
       JWT: null,
-      siteInfo: [
-        {
-          name: "Google",
-          url: "https://www.google.com/",
-          id: "",
-          password: "",
-        },
-        {
-          name: "Naver",
-          url: "https://nid.naver.com/",
-          id: "",
-          password: "",
-        },
-        {
-          name: "Kakao",
-          url: "https://www.kakao.com/",
-          id: "",
-          password: "",
-        },
-        {
-          name: "SMU",
-          url: "https://www.smu.ac.kr/",
-          id: "",
-          password: "",
-        },
-        {
-          name: "Interpark",
-          url: "https://www.interpark.com/",
-          id: "",
-          password: "",
-        },
-      ],
+      siteInfo: null,
       flag: {
         isSignedIn: false,
         isSignedInError: false,
@@ -115,7 +84,7 @@ export default new Vuex.Store({
       state.codeMatchSuccess = true;
     },
 
-    signUp() { },
+    signUp() {},
     // Sigin In 성공
     signInSuccess(state, payload) {
       state.userInfo.flag.isSignedIn = true;
@@ -187,7 +156,7 @@ export default new Vuex.Store({
               .post("https://54.180.153.254/checkIN/siteRead", loginData)
               .then((result) => {
                 if (result.data.result === true) {
-                  //commit("loadSiteInfo", result.data.siteInfo)
+                  state.userInfo.siteInfo = result.data.list;
                   for (var i = 0; i < result.data.list.length; i++) {
                     console.log(result.data.list[i]);
                   }
@@ -196,52 +165,62 @@ export default new Vuex.Store({
                 }
                 var args = process.argv.slice(2);
                 if (args.length == 0) {
-                  console.log("Usage: receive_logs_direct.js [info] [warning] [error]");
+                  console.log(
+                    "Usage: receive_logs_direct.js [info] [warning] [error]"
+                  );
                   process.exit(1);
                 }
 
-                amqp.connect(url, function (error, connect) {
+                amqp.connect(url, function(error, connect) {
                   if (error) {
                     console.log(error);
                     return;
                   }
-                  connect.createChannel(function (error, channel) {
+                  connect.createChannel(function(error, channel) {
                     if (error) {
                       console.log(error);
                       return;
                     }
                     var exchange = "amq.direct";
 
-                    channel.bindQueue(queueName, exchange, state.userInfo.agentID);
-                    channel.assertQueue(queueName, { durable: false, autoDelete: true }, function (error) {
-                      let recevieMessage = function () {
-                        channel.get(queueName, {}, function (error, message) {
-                          if (error) {
-                            console.log(error);
-                          }
-                          else if (message) {
-                            console.log(message.content.toString())
-                            if (message.content.toString() == "remote sign out") {
-                              dispatch("signOut", state)
-                              channel.ack(message);
-                              console.log("[info] Message dequeued")
-                              console.log("[info] Connection terminated")
-                              return
+                    channel.bindQueue(
+                      queueName,
+                      exchange,
+                      state.userInfo.agentID
+                    );
+                    channel.assertQueue(
+                      queueName,
+                      { durable: false, autoDelete: true },
+                      function(error) {
+                        let recevieMessage = function() {
+                          channel.get(queueName, {}, function(error, message) {
+                            if (error) {
+                              console.log(error);
+                            } else if (message) {
+                              console.log(message.content.toString());
+                              if (
+                                message.content.toString() == "remote sign out"
+                              ) {
+                                dispatch("signOut", state);
+                                channel.ack(message);
+                                console.log("[info] Message dequeued");
+                                console.log("[info] Connection terminated");
+                                return;
+                              }
+                              setTimeout(recevieMessage, 1000);
+                            } else {
+                              console.log("Connected!");
+                              if (state.userInfo.flag.isSignedIn == false) {
+                                console.log("[info] Connection terminated");
+                                return;
+                              }
+                              setTimeout(recevieMessage, 1000);
                             }
-                            setTimeout(recevieMessage, 1000);
-                          }
-                          else {
-                            console.log('Connected!');
-                            if (state.userInfo.flag.isSignedIn == false) {
-                              console.log("[info] Connection terminated")
-                              return
-                            }
-                            setTimeout(recevieMessage, 1000);
-                          }
-                        });
+                          });
+                        };
+                        recevieMessage();
                       }
-                      recevieMessage();
-                    });
+                    );
                   });
                 });
                 router.push({ name: "OTP" });
@@ -256,19 +235,15 @@ export default new Vuex.Store({
         });
     },
 
-    OTP({ }, otp) {
-      axios
-        .post("https://54.180.153.254/checkIN/otp", otp)
-        .then((res) => {
-          res.data.result === true
-            ? $router.push({ name: 'MainPage' })
-            : alert("OTP가 일치하지 않습니다.");
-        });
+    OTP({}, otp) {
+      axios.post("https://54.180.153.254/checkIN/otp", otp).then((res) => {
+        res.data.result === true
+          ? $router.push({ name: "MainPage" })
+          : alert("OTP가 일치하지 않습니다.");
+      });
     },
 
-    OTL({ },) {
-
-    },
+    OTL({}) {},
 
     signOut({ state, commit }) {
       const logoutData = {

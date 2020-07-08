@@ -9,11 +9,11 @@
             <v-card-actions>
               <v-row dense>
                 <!-- 구글 -->
-                <template v-for="item in items">
+                <template v-for="item in userInfo.siteInfo">
                   <v-card
                     class="ma-3"
                     :key="item.name"
-                    v-show="item.isConnected"
+                    v-show="item.result"
                     height="120"
                     width="90"
                     @click="login(item.name)"
@@ -46,11 +46,11 @@
             <v-card-actions>
               <v-row dense>
                 <!-- 구글 -->
-                <template v-for="item in items">
+                <template v-for="item in userInfo.siteInfo">
                   <v-card
                     class="ma-3"
                     :key="item.name"
-                    v-show="!item.isConnected"
+                    v-show="!item.result"
                     height="110"
                     width="90"
                     @click="login(item.name)"
@@ -112,43 +112,6 @@ export default {
       URL: "",
       ID: "",
       PW: "",
-      items: [
-        {
-          name: "Soultree",
-          url: "http://www.soultreepark.com/view/login",
-          id: "your id",
-          password: "your password",
-          isConnected: false,
-        },
-        {
-          name: "Naver",
-          url: "https://nid.naver.com/",
-          id: "your id",
-          password: "your password",
-          isConnected: false,
-        },
-        {
-          name: "Kakao",
-          url: "https://accounts.kakao.com/",
-          id: "your id",
-          password: "your password",
-          isConnected: false,
-        },
-        {
-          name: "SMU",
-          url: "https://ecampus.smu.ac.kr/login.php",
-          id: "your id",
-          password: "your password",
-          isConnected: false,
-        },
-        {
-          name: "Musinsa",
-          url: "https://my.musinsa.com/",
-          id: "your id",
-          password: "your password",
-          isConnected: false,
-        },
-      ],
     };
   },
   components: {
@@ -165,14 +128,14 @@ export default {
       } else {
         this.WEB_DRIVER_PATH = "src/bin/chromedriver";
       }
-      var index = this.items.findIndex(function(item) {
+      var index = this.userInfo.siteInfo.findIndex(function(item) {
         return item.name === name;
       });
-      this.ID = this.items[index].id;
-      this.PW = this.items[index].password;
-      this.URL = this.items[index].url;
+      this.ID = this.userInfo.siteInfo[index].id;
+      this.PW = this.userInfo.siteInfo[index].password;
+      this.URL = this.userInfo.siteInfo[index].url;
 
-      this.items[index].isConnected = true;
+      this.userInfo.siteInfo[index].result = true;
       this.SELENIUM = "checkIN-selenium.jar";
       var spawn = require("child_process").spawn;
       var child = spawn(
