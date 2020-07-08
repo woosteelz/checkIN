@@ -64,7 +64,7 @@ export default {
     ValidationObserver,
   },
   methods: {
-    ...mapActions(["OTP"]),
+    ...mapActions(["OTL"]),
   },
 };
 </script>

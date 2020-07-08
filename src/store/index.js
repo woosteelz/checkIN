@@ -99,6 +99,9 @@ export default new Vuex.Store({
     signOut(state) {
       state.userInfo = USER_INFO();
     },
+    addSite(state, payload) {
+      state.userInfo.siteInfo.push(payload);
+    },
   },
   actions: {
     verifyEmail({ commit }, agentAccountDTO) {
@@ -167,7 +170,38 @@ export default new Vuex.Store({
     signUp({ state, commit }, agentAccountDTO) {
       router.push({ name: "SignIn" });
     },
+    reVerifyEmail({ commit }, agentAccountDTO) {
+      if (!agentAccountDTO.agentID) {
+        commit("hasFormError");
+        return false;
+      }
+      axios
+        .post(
+          "https://54.180.153.254/checkIN/signUp/verifyCode",
+          agentAccountDTO
+        )
 
+        .then((res) => {
+          res.data.result === true
+            ? commit("verifyEmailSuccess")
+            : commit("isDuplicated");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    changePassword({ state, commit }, changePasswordDTO) {
+      if (changePasswordDTO.agentID !== changePasswordDTO.confirmPassword) {
+        alert("다시 입력해주세요");
+      }
+      axios.post("URL", changePasswordDTO).then((res) => {
+        if (res === true) {
+          alert("비밀번호를 성공적으로 변경했습니다.");
+        } else {
+          alert("오류 발생! 다시 시도해주세요");
+        }
+      });
+    },
     signIn({ state, commit, dispatch }, loginObj) {
       if (!loginObj.agentID || !loginObj.agentPW) {
         alert("이메일 및 비밀번호를 확인하세욧!");
@@ -303,14 +337,17 @@ export default new Vuex.Store({
       router.push({ name: "SignIn" });
     },
 
-    addSite({ commit }, siteInfo) {
+    addSite({ state, commit }, siteInfo) {
       axios
-        .post(
-          "http://18.218.11.150:8080/checkIN/signOut",
-          state.userInfo.agentID
-        )
+        .post("http://18.218.11.150:8080/checkIN/signOut", {
+          agentID: state.userInfo.agentID,
+          jwt: state.userInfo.JWT,
+          siteInfo,
+        })
         .then((res) => {
-          res.data.result === true ? commit("signOut") : alert("로그아웃 실패");
+          res.data.result === true
+            ? commit("addSite", siteInfo)
+            : alert("사이트 등록 실패");
         });
     },
   },

@@ -89,9 +89,112 @@
       >
         <v-icon x-large>mdi-plus-circle-outline</v-icon>
       </v-btn>
-      <v-dialog v-model="dialog" max-width="500px">
-        <v-card>
-          <addSite />
+      <v-dialog v-model="dialog" width="500px">
+        <v-card dark color="accent lighten-3">
+          <v-card-title class="accent lighten-2 and justify-center">
+            새 사이트 등록
+          </v-card-title>
+          <v-card-text class="pb-0">
+            <ValidationObserver v-slot="{ invalid }">
+              <form class="pa-3">
+                <ValidationProvider
+                  name="name"
+                  rules="required"
+                  v-slot="{ errors, valid }"
+                  class="mt-5"
+                >
+                  <v-text-field
+                    color="blue"
+                    v-model="name"
+                    label="사용자 지정 이름"
+                    :error-messages="errors"
+                    :success="valid"
+                    placeholder="사이트 이름을 입력해주세요."
+                  >
+                  </v-text-field>
+                </ValidationProvider>
+                <ValidationProvider
+                  name="URL"
+                  rules="required"
+                  v-slot="{ errors, valid }"
+                >
+                  <v-text-field
+                    color="blue"
+                    v-model="URL"
+                    label="URL"
+                    :error-messages="errors"
+                    :success="valid"
+                    placeholder="로그인 양식이 있는 페이지의 URL을 입력해주세요."
+                  >
+                  </v-text-field>
+                </ValidationProvider>
+                <ValidationProvider
+                  name="ID"
+                  rules="required"
+                  v-slot="{ errors, valid }"
+                >
+                  <v-text-field
+                    color="blue"
+                    v-model="ID"
+                    label="ID"
+                    :error-messages="errors"
+                    :success="valid"
+                    placeholder="로그인하기 위한 아이디를 입력해주세요."
+                  >
+                  </v-text-field>
+                </ValidationProvider>
+                <ValidationProvider
+                  name="PW"
+                  rules="required"
+                  v-slot="{ errors, valid }"
+                >
+                  <v-text-field
+                    color="blue"
+                    v-model="PW"
+                    label="Password"
+                    :error-messages="errors"
+                    :success="valid"
+                    :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="show ? 'text' : 'password'"
+                    @click:append="show = !show"
+                    placeholder="로그인하기 위한 비밀번호를 입력해주세요."
+                  >
+                  </v-text-field>
+                </ValidationProvider>
+                <v-divider class="my-3"></v-divider>
+                <v-card-actions>
+                  <v-btn large depressed color="error" @click="dialog = false"
+                    >취소</v-btn
+                  >
+                  <v-spacer></v-spacer>
+                  <v-slide-x-reverse-transition>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          icon
+                          class="my-0"
+                          v-bind="attrs"
+                          @click="resetForm"
+                          v-on="on"
+                        >
+                          <v-icon>mdi-refresh</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>양식 초기화</span>
+                    </v-tooltip>
+                  </v-slide-x-reverse-transition>
+                  <v-btn
+                    :disabled="invalid"
+                    large
+                    depressed
+                    color="success"
+                    @click="addSite({ name, URL, ID, PW })"
+                    >등록</v-btn
+                  >
+                </v-card-actions>
+              </form>
+            </ValidationObserver>
+          </v-card-text>
         </v-card>
       </v-dialog>
     </v-row>
@@ -99,29 +202,41 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import SiteCard from "@/components/SiteCard";
 import AddSite from "@/components/AddSite";
+import { ValidationProvider, ValidationObserver } from "vee-validate";
 
 export default {
   data() {
     return {
       dialog: false,
-      WEB_DRIVER_PATH: "",
-      SELENIUM: "",
-      URL: "",
+      show: false,
       ID: "",
       PW: "",
+      URL: "",
+      name: "",
+      WEB_DRIVER_PATH: "",
+      SELENIUM: "",
+      sURL: "",
+      sID: "",
+      sPW: "",
     };
   },
   components: {
     siteCard: SiteCard,
     addSite: AddSite,
+    ValidationProvider,
+    ValidationObserver,
   },
   computed: {
     ...mapState(["userInfo"]),
   },
   methods: {
+    ...mapActions(["addSite"]),
+    resetForm() {
+      (this.ID = ""), (this.PW = ""), (this.URL = ""), (this.name = "");
+    },
     login(name) {
       if (process.platform === "win32") {
         this.WEB_DRIVER_PATH = "src/bin/chromedriver.exe";
@@ -131,9 +246,9 @@ export default {
       var index = this.userInfo.siteInfo.findIndex(function(item) {
         return item.name === name;
       });
-      this.ID = this.userInfo.siteInfo[index].id;
-      this.PW = this.userInfo.siteInfo[index].password;
-      this.URL = this.userInfo.siteInfo[index].url;
+      this.sID = this.userInfo.siteInfo[index].id;
+      this.sPW = this.userInfo.siteInfo[index].password;
+      this.sURL = this.userInfo.siteInfo[index].url;
 
       this.userInfo.siteInfo[index].result = true;
       this.SELENIUM = "checkIN-selenium.jar";
@@ -144,9 +259,9 @@ export default {
           "-jar",
           this.SELENIUM,
           this.WEB_DRIVER_PATH,
-          this.URL,
-          this.ID,
-          this.PW,
+          this.sURL,
+          this.sID,
+          this.sPW,
         ],
         ["shell: false"]
       );
