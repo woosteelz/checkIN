@@ -84,7 +84,7 @@ export default new Vuex.Store({
       state.codeMatchSuccess = true;
     },
 
-    signUp() {},
+    signUp() { },
     // Sigin In 성공
     signInSuccess(state, payload) {
       state.userInfo.flag.isSignedIn = true;
@@ -99,6 +99,9 @@ export default new Vuex.Store({
     signOut(state) {
       state.userInfo = USER_INFO();
     },
+    addSite(state, payload) {
+      state.userInfo.siteInfo.push(payload);
+    }
   },
   actions: {
     verifyEmail({ commit }, agentAccountDTO) {
@@ -133,7 +136,38 @@ export default new Vuex.Store({
     signUp({ state, commit }, agentAccountDTO) {
       router.push({ name: "SignIn" });
     },
+    reVerifyEmail({ commit }, agentAccountDTO) {
+      if (!agentAccountDTO.agentID) {
+        commit("hasFormError");
+        return false;
+      }
+      axios
+        .post(
+          "https://54.180.153.254/checkIN/signUp/verifyCode",
+          agentAccountDTO
+        )
 
+        .then((res) => {
+          res.data.result === true
+            ? commit("verifyEmailSuccess")
+            : commit("isDuplicated");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    changePassword({ state, commit }, changePasswordDTO) {
+      if (changePasswordDTO.agentID !== changePasswordDTO.confirmPassword) {
+        alert("다시 입력해주세요");
+      }
+      axios.post("URL", changePasswordDTO).then((res) => {
+        if (res === true) {
+          alert("비밀번호를 성공적으로 변경했습니다.");
+        } else {
+          alert("오류 발생! 다시 시도해주세요");
+        }
+      });
+    },
     signIn({ state, commit, dispatch }, loginObj) {
       if (!loginObj.agentID || !loginObj.agentPW) {
         alert("이메일 및 비밀번호를 확인하세욧!");
@@ -171,12 +205,12 @@ export default new Vuex.Store({
                   process.exit(1);
                 }
 
-                amqp.connect(url, function(error, connect) {
+                amqp.connect(url, function (error, connect) {
                   if (error) {
                     console.log(error);
                     return;
                   }
-                  connect.createChannel(function(error, channel) {
+                  connect.createChannel(function (error, channel) {
                     if (error) {
                       console.log(error);
                       return;
@@ -191,9 +225,9 @@ export default new Vuex.Store({
                     channel.assertQueue(
                       queueName,
                       { durable: false, autoDelete: true },
-                      function(error) {
-                        let recevieMessage = function() {
-                          channel.get(queueName, {}, function(error, message) {
+                      function (error) {
+                        let recevieMessage = function () {
+                          channel.get(queueName, {}, function (error, message) {
                             if (error) {
                               console.log(error);
                             } else if (message) {
@@ -235,7 +269,7 @@ export default new Vuex.Store({
         });
     },
 
-    OTP({}, otp) {
+    OTP({ }, otp) {
       axios.post("https://54.180.153.254/checkIN/otp", otp).then((res) => {
         res.data.result === true
           ? $router.push({ name: "MainPage" })
@@ -243,7 +277,7 @@ export default new Vuex.Store({
       });
     },
 
-    OTL({}) {},
+    OTL({ }) { },
 
     signOut({ state, commit }) {
       const logoutData = {
@@ -261,14 +295,14 @@ export default new Vuex.Store({
       router.push({ name: "SignIn" });
     },
 
-    addSite({ commit }, siteInfo) {
+    addSite({ state, commit }, siteInfo) {
       axios
         .post(
           "http://18.218.11.150:8080/checkIN/signOut",
-          state.userInfo.agentID
+          { agentID: state.userInfo.agentID, jwt: state.userInfo.JWT, siteInfo }
         )
         .then((res) => {
-          res.data.result === true ? commit("signOut") : alert("로그아웃 실패");
+          res.data.result === true ? commit("addSite", siteInfo) : alert("사이트 등록 실패");
         });
     },
   },
