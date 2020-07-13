@@ -14,7 +14,7 @@
               v-slot="{ errors, valid }"
             >
               <v-text-field
-                type="password"
+                type="text"
                 dark
                 v-model="otl"
                 :error-messages="errors"
@@ -38,7 +38,7 @@
                   width="100"
                   depressed
                   :disabled="invalid"
-                  @click="OTL({ otl })"
+                  @click="OTL(otl)"
                 >
                   로그인
                 </v-btn>
@@ -53,10 +53,12 @@
 
 <script>
 import { ValidationProvider, ValidationObserver } from "vee-validate";
+import { mapActions } from "vuex";
+
 export default {
   data() {
     return {
-      otl: null,
+      otl: "",
     };
   },
   components: {

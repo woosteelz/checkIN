@@ -84,7 +84,7 @@ export default new Vuex.Store({
       state.codeMatchSuccess = true;
     },
 
-    signUp() { },
+    signUp() {},
     // Sigin In 성공
     signInSuccess(state, payload) {
       state.userInfo.flag.isSignedIn = true;
@@ -166,7 +166,6 @@ export default new Vuex.Store({
         }
       });
     },
-
     signUp({ state, commit }, agentAccountDTO) {
       axios
         .post(
@@ -239,9 +238,7 @@ export default new Vuex.Store({
               .then((result) => {
                 if (result.data.result === true) {
                   state.userInfo.siteInfo = result.data.list;
-                  for (var i = 0; i < result.data.list.length; i++) {
-                    console.log(result.data.list[i]);
-                  }
+                  console.log(result.data.list);
                 } else {
                   alert("사이트 정보 불러오기 실패!");
                 }
@@ -252,13 +249,12 @@ export default new Vuex.Store({
                   );
                   process.exit(1);
                 }
-
-                amqp.connect(url, function (error, connect) {
+                amqp.connect(url, function(error, connect) {
                   if (error) {
                     console.log(error);
                     return;
                   }
-                  connect.createChannel(function (error, channel) {
+                  connect.createChannel(function(error, channel) {
                     if (error) {
                       console.log(error);
                       return;
@@ -273,9 +269,9 @@ export default new Vuex.Store({
                     channel.assertQueue(
                       queueName,
                       { durable: false, autoDelete: true },
-                      function (error) {
-                        let recevieMessage = function () {
-                          channel.get(queueName, {}, function (error, message) {
+                      function(error) {
+                        let recevieMessage = function() {
+                          channel.get(queueName, {}, function(error, message) {
                             if (error) {
                               console.log(error);
                             } else if (message) {
@@ -316,22 +312,110 @@ export default new Vuex.Store({
         });
     },
 
-    OTP({ }, otp) {
-      axios.post("https://54.180.153.254/checkIN/otp", otp).then((res) => {
-        res.data.result === true
-          ? $router.push({ name: "MainPage" })
-          : alert("OTP가 일치하지 않습니다.");
-      });
+    OTP({ state }, otp) {
+      const verify_code = otp;
+      axios
+        .post("https://54.180.153.254/checkIN/testOTP", {
+          agentID: state.userInfo.agentID,
+          verify_code: otp,
+        })
+        .then((res) => {
+          res.data.result === true
+            ? $router.push({ name: "MainPage" })
+            : alert("OTP가 일치하지 않습니다.");
+        });
     },
 
     OTL({ state, commit }, otl) {
-      axios.post("URL", otl).then((res) => {
-        if (res.data.result === true) {
-          $router.push({ name: "MainPage" });
-        } else {
-          alert("번호를 다시 확인해 주세요.");
-        }
-      });
+      const verify_code = otl;
+
+      axios
+        .post("https://54.180.153.254/checkIN/loginNumber/verify", {
+          verify_code,
+        })
+        .then((res) => {
+          if (res.data.result === true) {
+            commit("signInSuccess", res);
+
+            const loginData = {
+              agentID: state.userInfo.agentID,
+              jwt: state.userInfo.JWT,
+            };
+
+            axios
+              .post("https://54.180.153.254/checkIN/siteRead", loginData)
+              .then((result) => {
+                if (result.data.result === true) {
+                  state.userInfo.siteInfo = result.data.list;
+                  console.log(result.data.list);
+                } else {
+                  alert("사이트 정보 불러오기 실패!");
+                }
+                var args = process.argv.slice(2);
+                if (args.length == 0) {
+                  console.log(
+                    "Usage: receive_logs_direct.js [info] [warning] [error]"
+                  );
+                  process.exit(1);
+                }
+                amqp.connect(url, function(error, connect) {
+                  if (error) {
+                    console.log(error);
+                    return;
+                  }
+                  connect.createChannel(function(error, channel) {
+                    if (error) {
+                      console.log(error);
+                      return;
+                    }
+                    var exchange = "amq.direct";
+
+                    channel.bindQueue(
+                      queueName,
+                      exchange,
+                      state.userInfo.agentID
+                    );
+                    channel.assertQueue(
+                      queueName,
+                      { durable: false, autoDelete: true },
+                      function(error) {
+                        let recevieMessage = function() {
+                          channel.get(queueName, {}, function(error, message) {
+                            if (error) {
+                              console.log(error);
+                            } else if (message) {
+                              console.log(message.content.toString());
+                              if (
+                                message.content.toString() == "remote sign out"
+                              ) {
+                                dispatch("signOut", state);
+                                channel.ack(message);
+                                console.log("[info] Message dequeued");
+                                console.log("[info] Connection terminated");
+                                return;
+                              }
+                              setTimeout(recevieMessage, 1000);
+                            } else {
+                              console.log("Connected!");
+                              if (state.userInfo.flag.isSignedIn == false) {
+                                console.log("[info] Connection terminated");
+                                return;
+                              }
+                              setTimeout(recevieMessage, 1000);
+                            }
+                          });
+                        };
+                        recevieMessage();
+                      }
+                    );
+                  });
+                });
+                router.push({ name: "MainPage" });
+              });
+          } else {
+            alert("번호를 다시 확인해 주세요.");
+          }
+        });
     },
 
     signOut({ state, commit }) {
@@ -376,9 +460,7 @@ export default new Vuex.Store({
               .then((result) => {
                 if (result.data.result === true) {
                   state.userInfo.siteInfo = result.data.list;
-                  for (var i = 0; i < result.data.list.length; i++) {
-                    console.log(result.data.list[i]);
-                  }
+                  console.log(result.data.list);
                 } else {
                   alert("사이트 정보 불러오기 실패!");
                 }
@@ -401,7 +483,6 @@ export default new Vuex.Store({
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
       };
-
     },
 
     deleteSite({ state }, siteInfo) {
@@ -430,9 +511,7 @@ export default new Vuex.Store({
               .then((result) => {
                 if (result.data.result === true) {
                   state.userInfo.siteInfo = result.data.list;
-                  for (var i = 0; i < result.data.list.length; i++) {
-                    console.log(result.data.list[i]);
-                  }
+                  console.log(result.data.list);
                 } else {
                   alert("사이트 정보 불러오기 실패!");
                 }
@@ -441,7 +520,6 @@ export default new Vuex.Store({
             alert("사이트 삭제 실패");
           }
         });
-
     },
   },
   modules: {},

@@ -14,7 +14,7 @@
               v-slot="{ errors, valid }"
             >
               <v-text-field
-                type="password"
+                type="text"
                 dark
                 v-model="otp"
                 :error-messages="errors"
@@ -38,7 +38,7 @@
                   width="100"
                   depressed
                   :disabled="invalid"
-                  @click="$router.push({ name: 'MainPage' })"
+                  @click="OTP(otp)"
                 >
                   로그인
                 </v-btn>
@@ -58,7 +58,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      otp: null,
+      otp: "",
     };
   },
   components: {
