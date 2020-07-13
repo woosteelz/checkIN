@@ -84,7 +84,7 @@ export default new Vuex.Store({
       state.codeMatchSuccess = true;
     },
 
-    signUp() {},
+    signUp() { },
     // Sigin In 성공
     signInSuccess(state, payload) {
       state.userInfo.flag.isSignedIn = true;
@@ -168,6 +168,20 @@ export default new Vuex.Store({
     },
 
     signUp({ state, commit }, agentAccountDTO) {
+      axios
+        .post(
+          "https://54.180.153.254/checkIN/signUp/verifyCode",
+          agentAccountDTO
+        )
+
+        .then((res) => {
+          res.data.result === true
+            ? commit("verifyEmailSuccess")
+            : commit("isDuplicated");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       router.push({ name: "SignIn" });
     },
     reVerifyEmail({ commit }, agentAccountDTO) {
@@ -239,12 +253,12 @@ export default new Vuex.Store({
                   process.exit(1);
                 }
 
-                amqp.connect(url, function(error, connect) {
+                amqp.connect(url, function (error, connect) {
                   if (error) {
                     console.log(error);
                     return;
                   }
-                  connect.createChannel(function(error, channel) {
+                  connect.createChannel(function (error, channel) {
                     if (error) {
                       console.log(error);
                       return;
@@ -259,9 +273,9 @@ export default new Vuex.Store({
                     channel.assertQueue(
                       queueName,
                       { durable: false, autoDelete: true },
-                      function(error) {
-                        let recevieMessage = function() {
-                          channel.get(queueName, {}, function(error, message) {
+                      function (error) {
+                        let recevieMessage = function () {
+                          channel.get(queueName, {}, function (error, message) {
                             if (error) {
                               console.log(error);
                             } else if (message) {
@@ -302,7 +316,7 @@ export default new Vuex.Store({
         });
     },
 
-    OTP({}, otp) {
+    OTP({ }, otp) {
       axios.post("https://54.180.153.254/checkIN/otp", otp).then((res) => {
         res.data.result === true
           ? $router.push({ name: "MainPage" })
@@ -336,7 +350,7 @@ export default new Vuex.Store({
       router.push({ name: "SignIn" });
     },
 
-    addSite({ state, commit }, siteInfo) {
+    addSite({ state }, siteInfo) {
       const info = {
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
@@ -373,6 +387,61 @@ export default new Vuex.Store({
             alert("사이트 등록 실패");
           }
         });
+    },
+    updateSite({ state }, siteInfo) {
+      const info = {
+        agentID: state.userInfo.agentID,
+        jwt: state.userInfo.JWT,
+        id: siteInfo.ID,
+        pw: siteInfo.PW,
+        url: siteInfo.URL,
+        name: siteInfo.name,
+      };
+      const loginData = {
+        agentID: state.userInfo.agentID,
+        jwt: state.userInfo.JWT,
+      };
+
+    },
+
+    deleteSite({ state }, siteInfo) {
+      const info = {
+        agentID: state.userInfo.agentID,
+        jwt: state.userInfo.JWT,
+        id: siteInfo.id,
+        pw: siteInfo.pw,
+        url: siteInfo.url,
+        name: siteInfo.name,
+      };
+      const loginData = {
+        agentID: state.userInfo.agentID,
+        jwt: state.userInfo.JWT,
+      };
+      const headers = {
+        jwt: state.userInfo.JWT,
+      };
+      axios
+        .post("https://54.180.153.254/checkIN/siteDelete", info, { headers })
+        .then((res) => {
+          if (res.data.result === true) {
+            // 로그인 후 사이트 정보 불러오기
+            axios
+              .post("https://54.180.153.254/checkIN/siteRead", loginData)
+              .then((result) => {
+                if (result.data.result === true) {
+                  state.userInfo.siteInfo = result.data.list;
+                  for (var i = 0; i < result.data.list.length; i++) {
+                    console.log(result.data.list[i]);
+                  }
+                } else {
+                  alert("사이트 정보 불러오기 실패!");
+                }
+              });
+          } else {
+            alert("사이트 삭제 실패");
+          }
+        });
+
     },
   },
   modules: {},

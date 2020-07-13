@@ -20,7 +20,9 @@
                   >
                     <div class="pt-4">
                       <v-img
-                        :src="`${item.url}favicon.ico`"
+                        :src="
+                          `http://www.google.com/s2/favicons?sz=32&domain=${item.url}`
+                        "
                         height="48"
                         width="48"
                       />
@@ -45,15 +47,15 @@
             <v-card-title class="color: red--text">Disonnected</v-card-title>
             <v-card-actions>
               <v-row dense>
-                <!-- 구글 -->
+                <!-- 사이트 카드 -->
                 <template v-for="item in userInfo.siteInfo">
                   <v-card
                     class="ma-3"
-                    :key="item.name"
-                    v-show="!item.result"
                     height="110"
                     width="90"
-                    @click="login(item.name)"
+                    @click.left="login(item)"
+                    :key="userInfo.siteInfo.indexOf(item)"
+                    v-show="!item.result"
                   >
                     <div class="pt-4">
                       <v-img
@@ -206,10 +208,14 @@ import { mapState, mapActions } from "vuex";
 import SiteCard from "@/components/SiteCard";
 import AddSite from "@/components/AddSite";
 import { ValidationProvider, ValidationObserver } from "vee-validate";
+import { userInfo } from "os";
 
 export default {
   data() {
     return {
+      showMenu: false,
+      x: 0,
+      y: 0,
       dialog: false,
       show: false,
       ID: "",
@@ -237,20 +243,26 @@ export default {
     resetForm() {
       (this.ID = ""), (this.PW = ""), (this.URL = ""), (this.name = "");
     },
-    login(name) {
+    open(e) {
+      e.preventDefault();
+      this.showMenu = false;
+      this.x = e.clientX;
+      this.y = e.clientY;
+      this.$nextTick(() => {
+        this.showMenu = true;
+      });
+    },
+    login(item) {
       if (process.platform === "win32") {
         this.WEB_DRIVER_PATH = "src/bin/chromedriver.exe";
       } else {
         this.WEB_DRIVER_PATH = "src/bin/chromedriver";
       }
-      var index = this.userInfo.siteInfo.findIndex(function(item) {
-        return item.name === name;
-      });
-      this.sID = this.userInfo.siteInfo[index].id;
-      this.sPW = this.userInfo.siteInfo[index].password;
-      this.sURL = this.userInfo.siteInfo[index].url;
+      this.sID = item.id;
+      this.sPW = item.password;
+      this.sURL = item.url;
 
-      this.userInfo.siteInfo[index].result = true;
+      item.result = true;
       this.SELENIUM = "checkIN-selenium.jar";
       var spawn = require("child_process").spawn;
       var child = spawn(

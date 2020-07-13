@@ -67,9 +67,22 @@
             color="blue"
           />
         </span>
+
+        <!-- profile -->
         <div>
           <span id="profile" class="mr-4">
-            <edit class="mx-4" />
+            <v-btn
+              class="mr-4"
+              v-if="userInfo.flag.isSignedIn"
+              tile
+              icon
+              @click="dialog = !dialog"
+            >
+              <v-icon large color="white">mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn class="mr-4" v-else tile icon disabled>
+              <v-icon large color="white">mdi-pencil</v-icon>
+            </v-btn>
             <profile />
           </span>
           <span>
@@ -116,6 +129,69 @@
       <router-view />
     </v-content>
 
+    <!-- Edit -->
+    <v-dialog v-model="dialog">
+      <v-col align="center" justify="center">
+        <v-card flat color="accent lighten-2">
+          <v-card-title class="color: blue--text">Edit</v-card-title>
+          <v-card-actions>
+            <v-row dense>
+              <!-- 사이트 카드 -->
+
+              <template v-for="editItem in userInfo.siteInfo">
+                <v-menu offset-x :key="userInfo.siteInfo.indexOf(editItem)">
+                  <template v-slot:activator="{ on, attr }">
+                    <v-card
+                      class="ma-3"
+                      height="110"
+                      width="90"
+                      v-on="on"
+                      v-bind="attr"
+                    >
+                      <div class="pt-4">
+                        <v-img
+                          :src="
+                            `http://www.google.com/s2/favicons?sz=32&domain=${editItem.url}`
+                          "
+                          height="32px"
+                          width="32px"
+                        />
+                      </div>
+                      <v-card-title
+                        style="max-width: 99px"
+                        class="px-1 d-inline-block text-truncate"
+                      >
+                        {{ editItem.name }}
+                      </v-card-title>
+                    </v-card>
+                  </template>
+
+                  <!-- list -->
+                  <v-list dense>
+                    <v-list-item
+                      @click="
+                        updateSite({
+                          ID: editItem.ID,
+                          PW: editItem.PW,
+                          URL: editItem.URL,
+                          name: editItem.name,
+                        })
+                      "
+                    >
+                      <v-list-item-title>사이트 정보 수정</v-list-item-title>
+                    </v-list-item>
+                    <v-divider></v-divider>
+                    <v-list-item @click="siteDelete(editItem)">
+                      <v-list-item-title>사이트 정보 삭제</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </template>
+            </v-row>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-dialog>
     <!-- app Footer -->
     <v-footer color="secondary" dark padless>
       <v-btn
@@ -136,25 +212,19 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import Profile from "@/components/Profile";
-import Edit from "@/components/Edit";
 import amqp from "amqplib/callback_api";
+import store from "./store";
 
 export default {
   components: {
     profile: Profile,
-    edit: Edit,
   },
   data: () => ({
+    dialog: false,
     logOut: "false",
     state: "signIn",
     group: "",
     drawer: false,
-    items: [
-      { title: "Click Me" },
-      { title: "Click Me" },
-      { title: "Click Me" },
-      { title: "Click Me 2" },
-    ],
     links: ["About Us", "Team", "Contact Us"],
     maximized: false,
   }),
@@ -167,7 +237,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["signIn, signOut"]),
+    ...mapActions(["signIn, signOut, updateSite"]),
     getState() {
       const url = "amqp://54.180.253.154:5672";
       const queueName = "msg_queue";
@@ -222,6 +292,13 @@ export default {
         this.maximized = false;
         currentWindow.unmaximize();
       }
+    },
+    siteDelete(editItem) {
+      var id = editItem.id;
+      var pw = editItem.pw;
+      var url = editItem.url;
+      var name = editItem.name;
+      store.dispatch("deleteSite", { id, pw, url, name });
     },
   },
 };
