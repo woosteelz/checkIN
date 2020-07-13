@@ -106,25 +106,28 @@ export default {
       headers: [
         {
           text: "등록 기기 명",
-          align: "start",
+          align: "center",
           sortable: false,
           value: "deviceName",
         },
-        { text: "등록 일시", value: "enrollmentDate" },
-        { text: "인증 여부", value: "deviceEnable" },
+        { text: "등록 일시", align: "center", value: "enrollmentDate" },
+        { text: "인증 여부", align: "center", value: "deviceEnable" },
       ],
       enrollInfo: []
     };
   },
   computed: {
     ...mapState(["userInfo"]),
+    check_enrollInfo() {
+      return this.enrollInfo = this.$store.state.userInfo.device
+    }
   },
   methods: {
     ...mapActions(["readDevice", "otpEnable"]),
   },
   watch: {
-    enrollInfo(userInfo) {
-      this.enrollInfo = userInfo.device;
+    check_enrollInfo(newVal) {
+      this.enrollInfo = newVal
     }
   },
 };

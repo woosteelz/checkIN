@@ -629,8 +629,8 @@ export default new Vuex.Store({
       axios
         .post("https://54.180.153.254/checkIN/deviceRead", loginData)
         .then((result) => {
-            state.userInfo.device = result.data.list;
-            console.log(result.data.list);
+            state.userInfo.device = result.data;
+            console.log(result.data);
         });
     },
     otpEnable({state}, otpEnable) {
