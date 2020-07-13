@@ -4,7 +4,6 @@
       <v-col cols="3">
         <v-navigation-drawer dark absolute permanent color="#131C2E">
           <v-list>
-
             <!-- Home -->
             <v-list-item link>
               <v-list-item-content>
@@ -34,11 +33,11 @@
               </v-list-item-content>
             </v-list-item>
 
-            <!-- 기타설정 버튼 -->
+            <!-- 등록기기 관리 -->
             <v-list-item link>
               <v-list-item-content>
                 <v-list-item-title @click="$router.push({ name: 'Config' })"
-                  >기타 설정</v-list-item-title
+                  >등록기기 관리</v-list-item-title
                 >
               </v-list-item-content>
             </v-list-item>
@@ -54,33 +53,36 @@
                   </v-list-item>
                 </template>
                 <v-card>
-                  <v-card-title class="red white--text" >
+                  <v-card-title class="red white--text pt-3">
                     경고!
                   </v-card-title>
 
-                  <v-card-text>
-                    <strong>더이상 편리한 CheckIn 서비스를 이용하실 수 없게 됩니다. 그래도 하시겠습니까?</strong>
+                  <v-card-text class="py-5">
+                    <strong
+                      >더 이상 CheckIn 서비스를 이용할 수 없게됩니다.
+                      <pre />
+                      정말 탈퇴하시겠습니까?</strong
+                    >
                   </v-card-text>
 
                   <v-divider></v-divider>
 
                   <v-card-actions>
-                    <v-btn color="primary" text @click="dialog = false">
-                      아니요 더 이용할래요
+                    <v-btn color="red" text @click="dialog = false">
+                      취소
                     </v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="dialog = false">
-                      네. 더 이용하고 싶지 않아요
+                    <v-btn color="green" text @click="dialog = false">
+                      동의
                     </v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
             </div>
-
           </v-list>
         </v-navigation-drawer>
       </v-col>
-      
+
       <v-col cols="9" align-self="start">
         <router-view />
       </v-col>
@@ -92,7 +94,7 @@
 export default {
   data() {
     return {
-      dialog: false
+      dialog: false,
     };
   },
 };

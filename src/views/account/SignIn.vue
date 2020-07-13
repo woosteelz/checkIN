@@ -44,7 +44,7 @@
 
             <div class="my-2" style="grid-column-gap:10%">
               <v-btn
-                @click="signIn({ agentID, agentPW, jwt, uuid, result })"
+                @click="signIn({ agentID, agentPW })"
                 color="#43A047"
                 depressed
                 large

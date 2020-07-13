@@ -8,35 +8,36 @@
         <v-divider color="#607D8B" />
 
         <v-row>
-          <v-col cols="2">
+          <v-col cols="3">
             <v-subheader dark class="pt-5"><h3>이름:</h3></v-subheader>
           </v-col>
-          <v-col cols="10">
+          <v-col cols="9">
             <v-text-field
               label="Name"
-              value="기존 이름"
+              v-model="name"
+              :value="userInfo.name"
               dark
             ></v-text-field>
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="2">
+          <v-col cols="3">
             <v-subheader dark class="pt-5"><h3>이메일:</h3></v-subheader>
           </v-col>
-          <v-col cols="10">
+          <v-col cols="9">
             <v-text-field
               label="Email"
-              value="Email"
+              :value="userInfo.agentID"
               dark
               readonly=""
             ></v-text-field>
           </v-col>
         </v-row>
 
-        <br>
+        <br />
         <div class="d-flex justify-end">
-          <v-btn small @click="onclick">
-          submit
+          <v-btn small @click="changeName(name)">
+            submit
           </v-btn>
         </div>
       </v-col>
@@ -56,6 +57,17 @@ export default {
     VCheckBoxWithValidation,
     ValidationObserver,
     ValidationProvider,
+  },
+  data() {
+    return {
+      name: "",
+    };
+  },
+  computed: {
+    ...mapState(["userInfo"]),
+  },
+  methods: {
+    ...mapActions(["changeName"]),
   },
 };
 </script>

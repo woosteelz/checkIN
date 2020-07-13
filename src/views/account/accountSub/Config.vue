@@ -2,40 +2,20 @@
   <v-container fill-height fulid>
     <v-row no-gutters>
       <v-col cols="10">
-        <span class="white--text"><h3 class="mb-3">기타 설정</h3></span>
-
+        <span class="white--text"><h3>등록기기 관리</h3></span>
+        <br />
         <v-divider color="#607D8B" />
-        <!-- OTP 사용 -->
-        <div class="justify-space-between">
-          <v-row class="justify-space-between" no-gutters>
-            <span class="white--text and d-flex align-center">
-              <h5>OTP 사용</h5>
-            </span>
-            <v-switch dark dense v-model="use"></v-switch>
-          </v-row>
-        </div>
-        <!-- 브라우저 설정 -->
-        <div class="justify-space-between">
-          <v-row class="justify-space-between" no-gutters>
-            <span class="white--text and d-flex align-center">
-              <h5>브라우저 설정</h5>
-            </span>
-            <div class="justify-end">
-              <v-select :items="items" label="Standard" dark></v-select>
-            </div>
-          </v-row>
-        </div>
         <!-- 등록기기 관리 -->
         <div class="justify-space-between">
           <v-row class="justify-space-between" no-gutters>
             <span class="white--text and d-flex align-center">
-              <h5>등록기기 관리</h5>
+              <h5>등록기기</h5>
             </span>
             <div class="">
               <v-dialog v-model="dialog" width="500">
                 <template v-slot:activator="{ on }">
                   <div class="d-flex justify-end pt-5">
-                    <v-btn small v-on="on">
+                    <v-btn small v-on="on" @click="readDevice()">
                       조회
                     </v-btn>
                   </div>
@@ -72,12 +52,32 @@
                       취소
                     </v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="dialog = false">
+                    <v-btn color="primary" text @click="otpEnable()">
                       설정 완료
                     </v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+            </div>
+          </v-row>
+        </div>
+        <!-- OTP 사용 -->
+        <div class="justify-space-between">
+          <v-row class="justify-space-between" no-gutters>
+            <span class="white--text and d-flex align-center">
+              <h5>OTP 사용</h5>
+            </span>
+            <v-switch dark dense v-model="use"></v-switch>
+          </v-row>
+        </div>
+        <!-- 브라우저 설정 -->
+        <div class="justify-space-between">
+          <v-row class="justify-space-between" no-gutters>
+            <span class="white--text and d-flex align-center">
+              <h5>브라우저 설정</h5>
+            </span>
+            <div class="justify-end">
+              <v-select :items="items" label="Standard" dark></v-select>
             </div>
           </v-row>
         </div>
@@ -95,36 +95,43 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
       dialog: false,
-      use: true,
+      use: false,
       singleSelect: false,
-        selected: [],
-        headers: [
-          {
-            text: '등록 기기 명',
-            align: 'start',
-            sortable: false,
-            value: 'name',
-          },
-          { text: '등록 일시', value: 'enrollDate' },
-          { text: '등록 시간', value: 'enrollTime' },
-        ],
-        enrollInfo: [
-          {
-            name: 'iPhone11Pro',
-            enrollDate: '2020-05-05',
-            enrollTime: '17:25'
-          },
-          {
-            name: 'GalaxyNote9',
-            enrollDate: '2020-05-06',
-            enrollTime: '17:25'
-          },
-        ]
+      selected: [],
+      headers: [
+        {
+          text: "등록 기기 명",
+          align: "start",
+          sortable: false,
+          value: userInfo.device.deviceName,
+        },
+        { text: "등록 일시", value: userInfo.device.enrollmentDate },
+        { text: "인증 여부", value: userInfo.device.deviceEnable },
+      ],
+      enrollInfo: [
+        {
+          name: "iPhone11Pro",
+          enrollDate: "2020-05-05",
+          deviceEnable: "17:25",
+        },
+        {
+          name: "GalaxyNote9",
+          enrollDate: "2020-05-06",
+          enrollTime: "17:25",
+        },
+      ],
     };
+  },
+  computed: {
+    ...mapState(["userInfo"]),
+  },
+  methods: {
+    ...mapActions(["readDeivce"]),
   },
 };
 </script>

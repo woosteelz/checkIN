@@ -97,10 +97,8 @@
                         agentID,
                         agentPW,
                         confirmPassword,
-                        confrimCode,
+                        confirmCode,
                         name,
-                        errorCount,
-                        numberOfDevice,
                       })
                     "
                   >
@@ -135,8 +133,6 @@ export default {
       agentID: null,
       agentPW: null,
       name: null,
-      errorCount: null,
-      numberOfDevice: null,
       confirmPassword: null,
       agreement: false,
       confirmCode: null,

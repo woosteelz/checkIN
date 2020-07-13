@@ -1,11 +1,11 @@
 <template>
   <v-container fill-height fluid>
     <v-row no-gutters>
-      <v-col cols="8">
+      <v-col cols="10">
         <span class="white--text"><h3>현재 비밀번호 입력</h3></span>
-        <br>
+        <br />
         <v-divider color="#607D8B" />
-        <br>
+        <br />
         <VTextFieldWithValidation
           vid="agentPW"
           color="blue"
@@ -15,10 +15,10 @@
           type="password"
           placeholder="Please enter your Password"
         />
-        <br>
+        <br />
         <div class="d-flex justify-end">
           <v-btn small @click="$router.push({ name: 'NewPassword' })">
-          submit
+            submit
           </v-btn>
         </div>
       </v-col>
@@ -34,7 +34,7 @@ import axios from "axios";
 
 export default {
   components: {
-    VTextFieldWithValidation
+    VTextFieldWithValidation,
   },
 };
 </script>
