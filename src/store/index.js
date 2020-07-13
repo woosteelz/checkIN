@@ -18,6 +18,7 @@ const USER_INFO = () => {
     errorCount: null,
     numberOfDevice: null,
     JWT: null,
+    otpEnable: 0,
     siteInfo: [],
     device: [],
     flag: {
@@ -44,6 +45,7 @@ export default new Vuex.Store({
       errorCount: null,
       numberOfDevice: null,
       JWT: null,
+      otpEnable: 0,
       siteInfo: [],
       device: [],
       flag: {
@@ -93,6 +95,7 @@ export default new Vuex.Store({
       state.userInfo.flag.isSignedInError = false;
       state.userInfo.agentID = payload.data.agentID;
       state.userInfo.JWT = payload.data.jwt;
+      state.userInfo.name = payload.data.name;
     },
     signInFail(state) {
       state.userInfo.flag.isSignedIn = false;
@@ -308,6 +311,7 @@ export default new Vuex.Store({
                 });
             }
             else {
+              state.userInfo.agentID = res.data.agentID;
               router.push({ name: "OTP" });
             }
           } else {
@@ -319,7 +323,7 @@ export default new Vuex.Store({
         });
     },
 
-    OTP({ state }, otp) {
+    OTP({ state, commit, dispatch }, otp) {
       const verify_code = otp;
       axios
         .post("https://54.180.153.254/checkIN/verifyOTP", {
@@ -617,7 +621,7 @@ export default new Vuex.Store({
           }
         });
     },
-    readDeivce() {
+    readDevice({state}) {
       const loginData = {
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
@@ -625,16 +629,22 @@ export default new Vuex.Store({
       axios
         .post("https://54.180.153.254/checkIN/deviceRead", loginData)
         .then((result) => {
-          if (result.data.result === true) {
             state.userInfo.device = result.data.list;
             console.log(result.data.list);
-          } else {
-            alert("사이트 정보 불러오기 실패!");
-          }
         });
     },
-    otpEnable({ }) {
-
+    otpEnable({state}, otpEnable) {
+      const data = {
+        agentID: state.userInfo.agentID,
+        jwt: state.userInfo.JWT,
+        otpEnable
+      };
+      axios
+        .post("https://54.180.153.254/checkIN//update/otpEnable", data)
+        .then((result) => {
+            state.userInfo.device = result.data.list;
+            console.log(result.data.list);
+        });
     }
   },
   modules: {},

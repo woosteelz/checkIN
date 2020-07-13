@@ -2,7 +2,7 @@
   <v-container id="myAccount" fluid>
     <v-row>
       <v-col cols="3">
-        <v-navigation-drawer dark absolute permanent color="#131C2E">
+        <v-navigation-drawer expand-on-hover mini-variant-width="140" dark absolute permanent color="#131C2E">
           <v-list>
             <!-- Home -->
             <v-list-item link>

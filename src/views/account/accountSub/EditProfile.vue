@@ -15,7 +15,7 @@
             <v-text-field
               label="Name"
               v-model="name"
-              :value="userInfo.name"
+              :placeholder="userInfo.name"
               dark
             ></v-text-field>
           </v-col>

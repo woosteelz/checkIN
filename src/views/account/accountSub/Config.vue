@@ -31,7 +31,7 @@
                       :headers="headers"
                       :items="enrollInfo"
                       :single-select="singleSelect"
-                      item-key="name"
+                      item-key="deviceName"
                       show-select
                       class="elevation-1"
                     >
@@ -67,7 +67,7 @@
             <span class="white--text and d-flex align-center">
               <h5>OTP 사용</h5>
             </span>
-            <v-switch dark dense v-model="use"></v-switch>
+            <v-switch dark dense v-model="use" false-value="0" true-value="1" @change="otpEnable(use)"></v-switch>
           </v-row>
         </div>
         <!-- 브라우저 설정 -->
@@ -77,7 +77,7 @@
               <h5>브라우저 설정</h5>
             </span>
             <div class="justify-end">
-              <v-select :items="items" label="Standard" dark></v-select>
+              <v-select label="Standard" dark></v-select>
             </div>
           </v-row>
         </div>
@@ -100,7 +100,7 @@ export default {
   data() {
     return {
       dialog: false,
-      use: false,
+      use: this.$store.state.userInfo.otpEnable,
       singleSelect: false,
       selected: [],
       headers: [
@@ -108,30 +108,24 @@ export default {
           text: "등록 기기 명",
           align: "start",
           sortable: false,
-          value: userInfo.device.deviceName,
+          value: "deviceName",
         },
-        { text: "등록 일시", value: userInfo.device.enrollmentDate },
-        { text: "인증 여부", value: userInfo.device.deviceEnable },
+        { text: "등록 일시", value: "enrollmentDate" },
+        { text: "인증 여부", value: "deviceEnable" },
       ],
-      enrollInfo: [
-        {
-          name: "iPhone11Pro",
-          enrollDate: "2020-05-05",
-          deviceEnable: "17:25",
-        },
-        {
-          name: "GalaxyNote9",
-          enrollDate: "2020-05-06",
-          enrollTime: "17:25",
-        },
-      ],
+      enrollInfo: []
     };
   },
   computed: {
     ...mapState(["userInfo"]),
   },
   methods: {
-    ...mapActions(["readDeivce"]),
+    ...mapActions(["readDevice", "otpEnable"]),
+  },
+  watch: {
+    enrollInfo(userInfo) {
+      this.enrollInfo = userInfo.device;
+    }
   },
 };
 </script>

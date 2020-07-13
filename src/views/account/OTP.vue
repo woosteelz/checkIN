@@ -29,7 +29,7 @@
                   width="100"
                   color="grey darken-1 and white--text"
                   depressed
-                  @click="signOut()"
+                  @click="$router.push({ name: 'SignIn' })"
                 >
                   취소
                 </v-btn>

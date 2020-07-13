@@ -37,7 +37,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <div class="d-flex" id="header">
+    <div id="header">
       <v-system-bar
         id="systembar"
         class="justify-space-between"
@@ -47,7 +47,6 @@
       >
         <v-toolbar-title
           @click="$router.push({ name: 'SignIn' })"
-          style="width:300px"
         >
           <span class="ml-4">
             <strong>checkIN</strong>
@@ -69,7 +68,7 @@
         </span>
 
         <!-- profile -->
-        <div>
+        <div >
           <span id="profile" class="mr-4">
             <v-btn
               class="mr-4"

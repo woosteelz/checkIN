@@ -36,6 +36,11 @@ export default {
   components: {
     VTextFieldWithValidation,
   },
+  data() {
+    return {
+      agentPW: ""
+    }
+  },
 };
 </script>
 

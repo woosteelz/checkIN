@@ -18,12 +18,12 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title>
-            <span class="mx-1">{{ userInfo.name }}</span>
+          <v-list-item-title class="py-0 my-0">
+            <span class="mx-1">{{ userInfo.name }} 님</span>
           </v-list-item-title>
 
-          <v-list-item-subtitle>
-            <v-icon small class="my-2">mdi-settings-outline</v-icon>
+          <v-list-item-subtitle class="py-0">
+            <v-icon small class="mt-1 mb-2">mdi-settings-outline</v-icon>
             <span class="ma-1">프로필 편집</span>
           </v-list-item-subtitle>
         </v-list-item-content>
