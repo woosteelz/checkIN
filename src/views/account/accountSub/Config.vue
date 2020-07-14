@@ -27,19 +27,15 @@
 
                   <v-card-text>
                     <v-data-table
-                      v-model="selected"
                       :headers="headers"
                       :items="enrollInfo"
-                      :single-select="singleSelect"
                       item-key="deviceName"
-                      show-select
-                      class="elevation-1"
+                      class="elevation-1 mt-3"
                     >
-                      <template v-slot:top>
+                      <template v-slot:item.deviceEnable="{ item }">
                         <v-switch
-                          v-model="singleSelect"
-                          label="Single select"
-                          class="pa-3"
+                          v-model="item.deviceEnable"
+                          disabled
                         ></v-switch>
                       </template>
                     </v-data-table>
@@ -67,7 +63,14 @@
             <span class="white--text and d-flex align-center">
               <h5>OTP 사용</h5>
             </span>
-            <v-switch dark dense v-model="use" false-value="0" true-value="1" @change="otpEnable(use)"></v-switch>
+            <v-switch
+              dark
+              dense
+              v-model="use"
+              false-value="0"
+              true-value="1"
+              @change="otpEnable(use)"
+            ></v-switch>
           </v-row>
         </div>
         <!-- 브라우저 설정 -->
@@ -113,22 +116,22 @@ export default {
         { text: "등록 일시", align: "center", value: "enrollmentDate" },
         { text: "인증 여부", align: "center", value: "deviceEnable" },
       ],
-      enrollInfo: []
+      enrollInfo: [],
     };
   },
   computed: {
     ...mapState(["userInfo"]),
     check_enrollInfo() {
-      return this.enrollInfo = this.$store.state.userInfo.device
-    }
+      return (this.enrollInfo = this.$store.state.userInfo.device);
+    },
   },
   methods: {
     ...mapActions(["readDevice", "otpEnable"]),
   },
   watch: {
     check_enrollInfo(newVal) {
-      this.enrollInfo = newVal
-    }
+      this.enrollInfo = newVal;
+    },
   },
 };
 </script>

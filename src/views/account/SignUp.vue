@@ -1,7 +1,15 @@
 <template>
   <v-container fill-height fluid>
     <v-row align="center">
-      <v-col cols="6"> </v-col>
+      <v-col cols="6">
+        <div>
+          <v-img
+            height="300"
+            width="500"
+            src="@/assets/KakaoTalk_Photo_2020-07-14-12-22-36.png"
+          />
+        </div>
+      </v-col>
       <v-col cols="6">
         <div class="ma-3">
           <div class="ma-3">
