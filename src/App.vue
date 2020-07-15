@@ -45,9 +45,7 @@
         dark
         height="48"
       >
-        <v-toolbar-title
-          @click="$router.push({ name: 'SignIn' })"
-        >
+        <v-toolbar-title @click="$router.push({ name: 'SignIn' })">
           <span class="ml-4">
             <strong>checkIN</strong>
           </span>
@@ -68,7 +66,7 @@
         </span>
 
         <!-- profile -->
-        <div >
+        <div>
           <span id="profile" class="mr-4">
             <v-btn
               class="mr-4"
@@ -167,16 +165,7 @@
 
                   <!-- list -->
                   <v-list dense>
-                    <v-list-item
-                      @click="
-                        updateSite({
-                          ID: editItem.ID,
-                          PW: editItem.PW,
-                          URL: editItem.URL,
-                          name: editItem.name,
-                        })
-                      "
-                    >
+                    <v-list-item @click="(edit = !edit), (dialog = false)">
                       <v-list-item-title>사이트 정보 수정</v-list-item-title>
                     </v-list-item>
                     <v-divider></v-divider>
@@ -184,6 +173,126 @@
                       <v-list-item-title>사이트 정보 삭제</v-list-item-title>
                     </v-list-item>
                   </v-list>
+
+                  <!-- edit -->
+                  <v-dialog v-model="edit" width="500px">
+                    <v-card dark color="accent lighten-3">
+                      <v-card-title class="accent lighten-2 and justify-center">
+                        사이트 정보 수정
+                      </v-card-title>
+                      <v-card-text class="pb-0">
+                        <ValidationObserver v-slot="{ invalid }">
+                          <form class="pa-3">
+                            <ValidationProvider
+                              name="name"
+                              rules="required"
+                              v-slot="{ errors, valid }"
+                              class="mt-5"
+                            >
+                              <v-text-field
+                                color="blue"
+                                v-model="editItem.name"
+                                label="사용자 지정 이름"
+                                :error-messages="errors"
+                                :success="valid"
+                                readonly
+                              >
+                              </v-text-field>
+                            </ValidationProvider>
+                            <ValidationProvider
+                              name="URL"
+                              rules="required"
+                              v-slot="{ errors, valid }"
+                            >
+                              <v-text-field
+                                color="blue"
+                                v-model="editItem.url"
+                                label="URL"
+                                :error-messages="errors"
+                                :success="valid"
+                                readonly
+                              >
+                              </v-text-field>
+                            </ValidationProvider>
+                            <ValidationProvider
+                              name="ID"
+                              rules="required"
+                              v-slot="{ errors, valid }"
+                            >
+                              <v-text-field
+                                color="blue"
+                                v-model="editItem.id"
+                                label="ID"
+                                :error-messages="errors"
+                                :success="valid"
+                              >
+                              </v-text-field>
+                            </ValidationProvider>
+                            <ValidationProvider
+                              name="PW"
+                              rules="required"
+                              v-slot="{ errors, valid }"
+                            >
+                              <v-text-field
+                                color="blue"
+                                v-model="editItem.pw"
+                                label="Password"
+                                :error-messages="errors"
+                                :success="valid"
+                                :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                                :type="show ? 'text' : 'password'"
+                                @click:append="show = !show"
+                              >
+                              </v-text-field>
+                            </ValidationProvider>
+                            <v-divider class="my-3"></v-divider>
+                            <v-card-actions>
+                              <v-btn
+                                large
+                                depressed
+                                color="error"
+                                @click="edit = false"
+                                >취소</v-btn
+                              >
+                              <v-spacer></v-spacer>
+                              <v-slide-x-reverse-transition>
+                                <v-tooltip left>
+                                  <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                      icon
+                                      class="my-0"
+                                      v-bind="attrs"
+                                      @click="resetForm"
+                                      v-on="on"
+                                    >
+                                      <v-icon>mdi-refresh</v-icon>
+                                    </v-btn>
+                                  </template>
+                                  <span>양식 초기화</span>
+                                </v-tooltip>
+                              </v-slide-x-reverse-transition>
+                              <v-btn
+                                :disabled="invalid"
+                                large
+                                depressed
+                                color="success"
+                                @click="
+                                  editSite({
+                                    name: editItem.name,
+                                    URL: editItem.url,
+                                    ID: editItem.id,
+                                    PW: editItem.pw,
+                                  }),
+                                    (edit = false)
+                                "
+                                >등록</v-btn
+                              >
+                            </v-card-actions>
+                          </form>
+                        </ValidationObserver>
+                      </v-card-text>
+                    </v-card>
+                  </v-dialog>
                 </v-menu>
               </template>
             </v-row>
@@ -209,6 +318,7 @@
 </template>
 
 <script>
+import { ValidationProvider, ValidationObserver } from "vee-validate";
 import { mapState, mapActions } from "vuex";
 import Profile from "@/components/Profile";
 import amqp from "amqplib/callback_api";
@@ -217,8 +327,11 @@ import store from "./store";
 export default {
   components: {
     profile: Profile,
+    ValidationProvider,
+    ValidationObserver,
   },
   data: () => ({
+    edit: false,
     dialog: false,
     logOut: "false",
     state: "signIn",
@@ -226,6 +339,11 @@ export default {
     drawer: false,
     links: ["About Us", "Team", "Contact Us"],
     maximized: false,
+    name: "",
+    URL: "",
+    ID: "",
+    PW: "",
+    show: false,
   }),
   computed: {
     ...mapState(["userInfo"]),
@@ -236,7 +354,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["signIn, signOut, updateSite"]),
+    ...mapActions(["signIn", "signOut", "updateSite", "editSite"]),
+    resetForm() {
+      (this.ID = ""), (this.PW = ""), (this.URL = ""), (this.name = "");
+    },
     getState() {
       const url = "amqp://54.180.253.154:5672";
       const queueName = "msg_queue";

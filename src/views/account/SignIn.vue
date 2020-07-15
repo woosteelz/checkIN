@@ -2,6 +2,16 @@
   <v-container fill-height style="max-width:450px">
     <v-layout align-center row wrap>
       <v-flex xs12>
+        <!-- alert -->
+        <v-alert
+          v-model="$store.state.userInfo.flag.isSignedInError"
+          dismissible
+          type="error"
+        >
+          아이디와 비빌번호를 확인해주세요.
+        </v-alert>
+
+        <!-- form -->
         <v-card>
           <v-toolbar flat>
             <v-toolbar-title>Check in</v-toolbar-title>

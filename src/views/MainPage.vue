@@ -23,8 +23,8 @@
                         :src="
                           `http://www.google.com/s2/favicons?sz=32&domain=${item.url}`
                         "
-                        height="48"
-                        width="48"
+                        height="32"
+                        width="32"
                       />
                     </div>
                     <v-card-title

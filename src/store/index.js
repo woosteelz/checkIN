@@ -12,6 +12,9 @@ const queueName = "msg_queue";
 
 const USER_INFO = () => {
   return {
+    forSignUp: {
+      verify_code: null,
+    },
     agentID: null,
     agentPW: null,
     name: null,
@@ -25,18 +28,18 @@ const USER_INFO = () => {
       isSignedIn: false,
       isSignedInError: false,
     },
+    isDuplicated: false,
+    hasFormError: false,
+    verifySuccess: false,
+    codeMatchError: false,
+    codeMatchSuccess: false,
   };
 };
 
 export default new Vuex.Store({
   state: {
     forSignUp: {
-      agentID: null,
-      confirmCode: null,
-      name: null,
-      agentPW: null,
-      confirmPW: null,
-      step: 1,
+      verify_code: null,
     },
     userInfo: {
       agentID: null,
@@ -73,19 +76,20 @@ export default new Vuex.Store({
       state.isDuplicated = true;
       state.hasFormError = false;
     },
-    verifyEmailSuccess(state, agentID, verify_code) {
-      state.forSignUp.agentID = agentID;
-      state.forSignUp.verify_code = verify_code;
+    verifyEmailSuccess(state, payload) {
+      state.forSignUp.verify_code = payload.verify_code;
       state.verifySuccess = true;
       state.hasFormError = false;
       state.isDuplicated = false;
     },
-    rejectConfirmCode(state) {
-      state.codeMatchError = true;
-    },
-    confirmCode(state) {
-      state.codeMatchError = false;
-      state.codeMatchSuccess = true;
+    confirmCode(state, payload) {
+      if (state.forSignUp.verify_code != payload.confirmCode) {
+        state.codeMatchError = true;
+      }
+      else {
+        state.codeMatchError = false;
+        state.codeMatchSuccess = true;
+      }
     },
 
     signUp() { },
@@ -119,10 +123,13 @@ export default new Vuex.Store({
           "https://54.180.153.254/checkIN/signUp/verifyEmail",
           agentAccountDTO
         )
-
         .then((res) => {
+          let payload = {
+            agentID: agentAccountDTO.agentID,
+            verify_code: res.data.verify_code
+          }
           res.data.result === true
-            ? commit("verifyEmailSuccess")
+            ? commit("verifyEmailSuccess", payload)
             : commit("isDuplicated");
         })
         .catch((err) => {
@@ -143,20 +150,12 @@ export default new Vuex.Store({
 
         .then((res) => {
           res.data.result === true
-            ? commit("verifyEmailSuccess")
+            ? commit("verifyEmailSuccess", agentAccountDTO.agentID, res.data.verify_code)
             : commit("isDuplicated");
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-
-    confirmCode({ state, commit }, verify_code) {
-      if (verify_code !== state.forSignUp.verify_code) {
-        commit("rejectConfirmCode");
-        return false;
-      }
-      commit("ConfirmCode");
     },
 
     changePassword({ state, commit }, changePasswordDTO) {
@@ -171,22 +170,30 @@ export default new Vuex.Store({
         }
       });
     },
-    signUp({ state, commit }, agentAccountDTO) {
-      axios
-        .post(
-          "https://54.180.153.254/checkIN/signUp/verifyCode",
-          agentAccountDTO
-        )
+    signUp({ state, commit }, signUpData) {
+      commit("confirmCode", signUpData)
+      const info = {
+        agentID: signUpData.agentID,
+        agentPW: signUpData.agentPW,
+        name: signUpData.name,
+      };
+      if (state.codeMatchError == false) {
+        axios
+          .post(
+            "https://54.180.153.254/checkIN/signUp/signAccount",
+            info
+          )
 
-        .then((res) => {
-          res.data.result === true
-            ? commit("verifyEmailSuccess")
-            : commit("isDuplicated");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      router.push({ name: "SignIn" });
+          .then((res) => {
+            res.data.result === true
+              ? commit("verifyEmailSuccess")
+              : commit("isDuplicated");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        router.push({ name: "SignIn" });
+      }
     },
     reVerifyEmail({ commit }, agentAccountDTO) {
       if (!agentAccountDTO.agentID) {
@@ -556,7 +563,7 @@ export default new Vuex.Store({
           }
         });
     },
-    updateSite({ state }, siteInfo) {
+    editSite({ state }, siteInfo) {
       const info = {
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
@@ -568,7 +575,24 @@ export default new Vuex.Store({
       const loginData = {
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
-      };
+      }; axios
+        .post("https://54.180.153.254/checkIN/siteEdit", info)
+        .then((result) => {
+          if (result.data.result === true) {
+            axios
+              .post("https://54.180.153.254/checkIN/siteRead", loginData)
+              .then((res) => {
+                if (res.data.result === true) {
+                  state.userInfo.siteInfo = res.data.list;
+                  console.log(res.data.list);
+                } else {
+                  alert("사이트 정보 불러오기 실패!");
+                }
+              });
+          } else {
+            alert("사이트 수정 실패!");
+          }
+        });
     },
 
     deleteSite({ state }, siteInfo) {
@@ -621,7 +645,7 @@ export default new Vuex.Store({
           }
         });
     },
-    readDevice({state}) {
+    readDevice({ state }) {
       const loginData = {
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
@@ -629,11 +653,11 @@ export default new Vuex.Store({
       axios
         .post("https://54.180.153.254/checkIN/deviceRead", loginData)
         .then((result) => {
-            state.userInfo.device = result.data;
-            console.log(result.data);
+          state.userInfo.device = result.data;
+          console.log(result.data);
         });
     },
-    otpEnable({state}, otpEnable) {
+    otpEnable({ state }, otpEnable) {
       const data = {
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
@@ -642,8 +666,8 @@ export default new Vuex.Store({
       axios
         .post("https://54.180.153.254/checkIN//update/otpEnable", data)
         .then((result) => {
-            state.userInfo.device = result.data.list;
-            console.log(result.data.list);
+          state.userInfo.device = result.data.list;
+          console.log(result.data.list);
         });
     }
   },

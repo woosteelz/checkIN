@@ -14,6 +14,20 @@
         <div class="ma-3">
           <div class="ma-3">
             <ValidationObserver v-slot="{ invalid }">
+              <v-alert
+                v-model="$store.state.isDuplicated"
+                dismissible
+                type="error"
+              >
+                중복된 이메일입니다.
+              </v-alert>
+              <v-alert
+                v-model="$store.state.codeMatchError"
+                dismissible
+                type="error"
+              >
+                올바르지 않은 인증 코드입니다.
+              </v-alert>
               <form>
                 <ValidationProvider
                   name="email"
@@ -40,8 +54,6 @@
                             agentID,
                             agentPW,
                             name,
-                            errorCount,
-                            numberOfDevice,
                           })
                         "
                       >
@@ -104,7 +116,6 @@
                       signUp({
                         agentID,
                         agentPW,
-                        confirmPassword,
                         confirmCode,
                         name,
                       })
@@ -148,7 +159,7 @@ export default {
   },
   computed: {
     ...mapState([
-      "forSignUp, hasFormError",
+      "hasFormError",
       "isDuplicated",
       "codeMatchError",
       "verifySuccess",
