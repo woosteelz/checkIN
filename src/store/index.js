@@ -4,6 +4,7 @@ import axios from "axios";
 import router from "@/router/index";
 import { validate } from "vee-validate";
 import amqp from "amqplib/callback_api";
+import CryptoJS from 'crypto-js';
 
 Vue.use(Vuex);
 
@@ -174,7 +175,7 @@ export default new Vuex.Store({
       commit("confirmCode", signUpData)
       const info = {
         agentID: signUpData.agentID,
-        agentPW: signUpData.agentPW,
+        agentPW: CryptoJS.SHA256(signUpData.agentPW).toString(),
         name: signUpData.name,
       };
       if (state.codeMatchError == false) {
@@ -232,8 +233,12 @@ export default new Vuex.Store({
         alert("이메일 및 비밀번호를 확인하세욧!");
         return false;
       }
+      const info = {
+        agentID: loginObj.agentID,
+        agentPW: CryptoJS.SHA256(loginObj.agentPW).toString(),
+      };
       axios
-        .post("https://54.180.153.254/checkIN/signIn", loginObj)
+        .post("https://54.180.153.254/checkIN/signIn", info)
 
         .then((res) => {
           if (res.data.result === true) {

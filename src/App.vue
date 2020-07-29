@@ -99,27 +99,26 @@
         </div>
       </v-system-bar>
     </div>
+
     <!-- app 바 영역 -->
-    <div>
-      <v-app-bar
-        style="positon: relative"
-        app
-        dark
-        max-height="48"
-        color="primary"
-        dense
-      >
-        <!-- 메뉴열기 -->
-        <v-app-bar-nav-icon @click="drawer = true" />
+    <!-- <v-app-bar
+      style="positon: relative"
+      app
+      dark
+      max-height="48"
+      color="primary"
+      dense
+    > -->
+    <!-- 메뉴열기 -->
+    <!-- <v-app-bar-nav-icon @click="drawer = true" />
 
-        <v-spacer />
+      <v-spacer /> -->
 
-        <!-- 상단 우측 아이콘 -->
-        <v-btn icon tile color="red">
-          <v-icon color="white">mdi-heart</v-icon>
-        </v-btn>
-      </v-app-bar>
-    </div>
+    <!-- 상단 우측 아이콘 -->
+    <!-- <v-btn icon tile color="red">
+        <v-icon color="white">mdi-heart</v-icon>
+      </v-btn>
+    </v-app-bar> -->
 
     <!-- 컨텐츠 탈부착 영역 -->
     <v-content>
@@ -300,19 +299,22 @@
         </v-card>
       </v-col>
     </v-dialog>
+
     <!-- app Footer -->
-    <v-footer color="secondary" dark padless>
+    <v-footer app class="py-2" color="secondary" dark padless>
       <v-btn
         v-for="link in links"
         :key="link"
+        class="hidden-sm-and-down"
         color="white"
         text
         rounded
-        class="my-2"
         >{{ link }}</v-btn
       >
-      <v-spacer />
-      <strong class="mr-5">Copyright by checkIN service team</strong>
+      <v-spacer class="hidden-sm-and-down" />
+      <strong class="mx-5"
+        >Copyright © checkIN service team. All rights reserved.</strong
+      >
     </v-footer>
   </v-app>
 </template>
@@ -337,7 +339,7 @@ export default {
     state: "signIn",
     group: "",
     drawer: false,
-    links: ["About Us", "Team", "Contact Us"],
+    links: ["About Us", "Contact Us"],
     maximized: false,
     name: "",
     URL: "",
