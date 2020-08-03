@@ -35,7 +35,9 @@
                       <template v-slot:item.deviceEnable="{ item }">
                         <v-switch
                           v-model="item.deviceEnable"
-                          disabled
+                          @change="
+                            deviceEnable(item.deviceID, item.deviceEnable)
+                          "
                         ></v-switch>
                       </template>
                     </v-data-table>
@@ -48,7 +50,7 @@
                       취소
                     </v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="otpEnable()">
+                    <v-btn color="primary" text @click="dialog = false">
                       설정 완료
                     </v-btn>
                   </v-card-actions>
@@ -114,7 +116,7 @@ export default {
           value: "deviceName",
         },
         { text: "등록 일시", align: "center", value: "enrollmentDate" },
-        { text: "인증 여부", align: "center", value: "deviceEnable" },
+        { text: "인증 여부", value: "deviceEnable" },
       ],
       enrollInfo: [],
     };
@@ -126,7 +128,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["readDevice", "otpEnable"]),
+    ...mapActions(["readDevice", "otpEnable", "deviceEnable"]),
   },
   watch: {
     check_enrollInfo(newVal) {

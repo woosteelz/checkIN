@@ -4,7 +4,7 @@ import axios from "axios";
 import router from "@/router/index";
 import { validate } from "vee-validate";
 import amqp from "amqplib/callback_api";
-import CryptoJS from 'crypto-js';
+import CryptoJS from "crypto-js";
 
 Vue.use(Vuex);
 
@@ -86,14 +86,13 @@ export default new Vuex.Store({
     confirmCode(state, payload) {
       if (state.forSignUp.verify_code != payload.confirmCode) {
         state.codeMatchError = true;
-      }
-      else {
+      } else {
         state.codeMatchError = false;
         state.codeMatchSuccess = true;
       }
     },
 
-    signUp() { },
+    signUp() {},
     // Sigin In 성공
     signInSuccess(state, payload) {
       state.userInfo.flag.isSignedIn = true;
@@ -127,8 +126,8 @@ export default new Vuex.Store({
         .then((res) => {
           let payload = {
             agentID: agentAccountDTO.agentID,
-            verify_code: res.data.verify_code
-          }
+            verify_code: res.data.verify_code,
+          };
           res.data.result === true
             ? commit("verifyEmailSuccess", payload)
             : commit("isDuplicated");
@@ -151,7 +150,11 @@ export default new Vuex.Store({
 
         .then((res) => {
           res.data.result === true
-            ? commit("verifyEmailSuccess", agentAccountDTO.agentID, res.data.verify_code)
+            ? commit(
+                "verifyEmailSuccess",
+                agentAccountDTO.agentID,
+                res.data.verify_code
+              )
             : commit("isDuplicated");
         })
         .catch((err) => {
@@ -172,7 +175,7 @@ export default new Vuex.Store({
       });
     },
     signUp({ state, commit }, signUpData) {
-      commit("confirmCode", signUpData)
+      commit("confirmCode", signUpData);
       const info = {
         agentID: signUpData.agentID,
         agentPW: CryptoJS.SHA256(signUpData.agentPW).toString(),
@@ -180,10 +183,7 @@ export default new Vuex.Store({
       };
       if (state.codeMatchError == false) {
         axios
-          .post(
-            "https://54.180.153.254/checkIN/signUp/signAccount",
-            info
-          )
+          .post("https://54.180.153.254/checkIN/signUp/signAccount", info)
 
           .then((res) => {
             res.data.result === true
@@ -267,12 +267,12 @@ export default new Vuex.Store({
                     );
                     process.exit(1);
                   }
-                  amqp.connect(url, function (error, connect) {
+                  amqp.connect(url, function(error, connect) {
                     if (error) {
                       console.log(error);
                       return;
                     }
-                    connect.createChannel(function (error, channel) {
+                    connect.createChannel(function(error, channel) {
                       if (error) {
                         console.log(error);
                         return;
@@ -287,15 +287,19 @@ export default new Vuex.Store({
                       channel.assertQueue(
                         queueName,
                         { durable: false, autoDelete: true },
-                        function (error) {
-                          let recevieMessage = function () {
-                            channel.get(queueName, {}, function (error, message) {
+                        function(error) {
+                          let recevieMessage = function() {
+                            channel.get(queueName, {}, function(
+                              error,
+                              message
+                            ) {
                               if (error) {
                                 console.log(error);
                               } else if (message) {
                                 console.log(message.content.toString());
                                 if (
-                                  message.content.toString() == "remote sign out"
+                                  message.content.toString() ==
+                                  "remote sign out"
                                 ) {
                                   dispatch("signOut", state);
                                   channel.ack(message);
@@ -321,8 +325,7 @@ export default new Vuex.Store({
                   });
                   router.push({ name: "MainPage" });
                 });
-            }
-            else {
+            } else {
               state.userInfo.agentID = res.data.agentID;
               router.push({ name: "OTP" });
             }
@@ -367,12 +370,12 @@ export default new Vuex.Store({
                   );
                   process.exit(1);
                 }
-                amqp.connect(url, function (error, connect) {
+                amqp.connect(url, function(error, connect) {
                   if (error) {
                     console.log(error);
                     return;
                   }
-                  connect.createChannel(function (error, channel) {
+                  connect.createChannel(function(error, channel) {
                     if (error) {
                       console.log(error);
                       return;
@@ -387,9 +390,9 @@ export default new Vuex.Store({
                     channel.assertQueue(
                       queueName,
                       { durable: false, autoDelete: true },
-                      function (error) {
-                        let recevieMessage = function () {
-                          channel.get(queueName, {}, function (error, message) {
+                      function(error) {
+                        let recevieMessage = function() {
+                          channel.get(queueName, {}, function(error, message) {
                             if (error) {
                               console.log(error);
                             } else if (message) {
@@ -459,12 +462,12 @@ export default new Vuex.Store({
                   );
                   process.exit(1);
                 }
-                amqp.connect(url, function (error, connect) {
+                amqp.connect(url, function(error, connect) {
                   if (error) {
                     console.log(error);
                     return;
                   }
-                  connect.createChannel(function (error, channel) {
+                  connect.createChannel(function(error, channel) {
                     if (error) {
                       console.log(error);
                       return;
@@ -479,9 +482,9 @@ export default new Vuex.Store({
                     channel.assertQueue(
                       queueName,
                       { durable: false, autoDelete: true },
-                      function (error) {
-                        let recevieMessage = function () {
-                          channel.get(queueName, {}, function (error, message) {
+                      function(error) {
+                        let recevieMessage = function() {
+                          channel.get(queueName, {}, function(error, message) {
                             if (error) {
                               console.log(error);
                             } else if (message) {
@@ -548,25 +551,23 @@ export default new Vuex.Store({
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
       };
-      axios
-        .post("https://54.180.153.254/checkIN/siteAdd", info)
-        .then((res) => {
-          if (res.data.result === true) {
-            // 로그인 후 사이트 정보 불러오기
-            axios
-              .post("https://54.180.153.254/checkIN/siteRead", loginData)
-              .then((result) => {
-                if (result.data.result === true) {
-                  state.userInfo.siteInfo = result.data.list;
-                  console.log(result.data.list);
-                } else {
-                  alert("사이트 정보 불러오기 실패!");
-                }
-              });
-          } else {
-            alert("사이트 등록 실패");
-          }
-        });
+      axios.post("https://54.180.153.254/checkIN/siteAdd", info).then((res) => {
+        if (res.data.result === true) {
+          // 로그인 후 사이트 정보 불러오기
+          axios
+            .post("https://54.180.153.254/checkIN/siteRead", loginData)
+            .then((result) => {
+              if (result.data.result === true) {
+                state.userInfo.siteInfo = result.data.list;
+                console.log(result.data.list);
+              } else {
+                alert("사이트 정보 불러오기 실패!");
+              }
+            });
+        } else {
+          alert("사이트 등록 실패");
+        }
+      });
     },
     editSite({ state }, siteInfo) {
       const info = {
@@ -580,7 +581,8 @@ export default new Vuex.Store({
       const loginData = {
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
-      }; axios
+      };
+      axios
         .post("https://54.180.153.254/checkIN/siteEdit", info)
         .then((result) => {
           if (result.data.result === true) {
@@ -644,7 +646,7 @@ export default new Vuex.Store({
         .post("https://54.180.153.254/checkIN/update/accountName", data)
         .then((res) => {
           if (res.data.result === true) {
-            state.userInfo.name = name
+            state.userInfo.name = name;
           } else {
             alert("이름 변경 실패!");
           }
@@ -666,7 +668,7 @@ export default new Vuex.Store({
       const data = {
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
-        otpEnable
+        otpEnable,
       };
       axios
         .post("https://54.180.153.254/checkIN//update/otpEnable", data)
@@ -674,7 +676,18 @@ export default new Vuex.Store({
           state.userInfo.device = result.data.list;
           console.log(result.data.list);
         });
-    }
+    },
+    deviceEnable({ state }, deviceID, deviceEnable) {
+      const data = {
+        agentID: state.userInfo.agentID,
+        jwt: state.userInfo.JWT,
+        deviceID,
+        deviceEnable,
+      };
+      axios
+        .post("https://54.180.153.254/checkIN//update/deviceEnable", data)
+        .then((result) => {});
+    },
   },
   modules: {},
 });
