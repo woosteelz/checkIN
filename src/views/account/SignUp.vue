@@ -28,7 +28,16 @@
               >
                 올바르지 않은 인증 코드입니다.
               </v-alert>
-              <form>
+              <form
+                @keyup.enter="
+                  signUp({
+                    agentID,
+                    agentPW,
+                    confirmCode,
+                    name,
+                  })
+                "
+              >
                 <ValidationProvider
                   name="email"
                   rules="required|email"

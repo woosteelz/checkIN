@@ -1,21 +1,19 @@
 <template>
   <v-container fill-height fluid>
     <v-row align="center" justify="center">
-      <v-col cols="3" align-self="start"> </v-col>
+      <v-col cols="3" align-self="start"></v-col>
       <v-col cols="6">
         <div class="ma-3">
           <div class="ma-3">
             <span class="text-center and white--text">
-              <h2><strong>비밀번호 변경</strong></h2>
+              <h2>
+                <strong>비밀번호 변경</strong>
+              </h2>
               <br />
             </span>
             <ValidationObserver v-slot="{ invalid }">
               <form>
-                <ValidationProvider
-                  name="email"
-                  rules="required|email"
-                  v-slot="{ errors, valid }"
-                >
+                <ValidationProvider name="email" rules="required|email" v-slot="{ errors, valid }">
                   <v-text-field
                     dark
                     v-model="agentID"
@@ -40,9 +38,7 @@
                             numberOfDevice,
                           })
                         "
-                      >
-                        코드 전송
-                      </v-btn>
+                      >코드 전송</v-btn>
                     </template>
                   </v-text-field>
                 </ValidationProvider>
@@ -81,9 +77,7 @@
                     color="grey darken-1 and white--text"
                     depressed
                     @click="$router.push({ name: 'SignIn' })"
-                  >
-                    취소
-                  </v-btn>
+                  >취소</v-btn>
                   <v-btn
                     color="success"
                     width="100"
@@ -97,9 +91,7 @@
                         confrimCode,
                       })
                     "
-                  >
-                    비밀번호 변경
-                  </v-btn>
+                  >비밀번호 변경</v-btn>
                 </div>
               </form>
             </ValidationObserver>
@@ -123,14 +115,14 @@ export default {
     VTextFieldWithValidation,
     VCheckBoxWithValidation,
     ValidationObserver,
-    ValidationProvider,
+    ValidationProvider
   },
   data() {
     return {
       agentID: null,
       agentPW: null,
       confirmPassword: null,
-      confirmCode: null,
+      confirmCode: null
     };
   },
   computed: {
@@ -138,12 +130,12 @@ export default {
       "forSignUp, hasFormError",
       "isDuplicated",
       "codeMatchError",
-      "verifySuccess",
-    ]),
+      "verifySuccess"
+    ])
   },
   methods: {
-    ...mapActions(["reVerifyEmail", "changePassword"]),
-  },
+    ...mapActions(["reVerifyEmail", "changePassword"])
+  }
 };
 </script>
 

@@ -92,9 +92,9 @@ export default new Vuex.Store({
       }
     },
 
-    signUp() {},
+    signUp() { },
     // Sigin In 성공
-    signInSuccess(state, payload) {
+    signInSuccess(state, payload, payload2) {
       state.userInfo.flag.isSignedIn = true;
       state.userInfo.flag.isSignedInError = false;
       state.userInfo.agentID = payload.data.agentID;
@@ -151,10 +151,10 @@ export default new Vuex.Store({
         .then((res) => {
           res.data.result === true
             ? commit(
-                "verifyEmailSuccess",
-                agentAccountDTO.agentID,
-                res.data.verify_code
-              )
+              "verifyEmailSuccess",
+              agentAccountDTO.agentID,
+              res.data.verify_code
+            )
             : commit("isDuplicated");
         })
         .catch((err) => {
@@ -230,8 +230,8 @@ export default new Vuex.Store({
     },
     signIn({ state, commit, dispatch }, loginObj) {
       if (!loginObj.agentID || !loginObj.agentPW) {
-        alert("이메일 및 비밀번호를 확인하세욧!");
-        return false;
+        commit("signInFail");
+        return;
       }
       const info = {
         agentID: loginObj.agentID,
@@ -243,6 +243,7 @@ export default new Vuex.Store({
         .then((res) => {
           if (res.data.result === true) {
             if (res.data.otpEnable === 0) {
+              state.userInfo.agentPW = loginObj.agentPW;
               commit("signInSuccess", res);
 
               const loginData = {
@@ -267,12 +268,12 @@ export default new Vuex.Store({
                     );
                     process.exit(1);
                   }
-                  amqp.connect(url, function(error, connect) {
+                  amqp.connect(url, function (error, connect) {
                     if (error) {
                       console.log(error);
                       return;
                     }
-                    connect.createChannel(function(error, channel) {
+                    connect.createChannel(function (error, channel) {
                       if (error) {
                         console.log(error);
                         return;
@@ -287,9 +288,9 @@ export default new Vuex.Store({
                       channel.assertQueue(
                         queueName,
                         { durable: false, autoDelete: true },
-                        function(error) {
-                          let recevieMessage = function() {
-                            channel.get(queueName, {}, function(
+                        function (error) {
+                          let recevieMessage = function () {
+                            channel.get(queueName, {}, function (
                               error,
                               message
                             ) {
@@ -327,6 +328,7 @@ export default new Vuex.Store({
                 });
             } else {
               state.userInfo.agentID = res.data.agentID;
+              state.userInfo.agentPW = loginObj.agentPW;
               router.push({ name: "OTP" });
             }
           } else {
@@ -370,12 +372,12 @@ export default new Vuex.Store({
                   );
                   process.exit(1);
                 }
-                amqp.connect(url, function(error, connect) {
+                amqp.connect(url, function (error, connect) {
                   if (error) {
                     console.log(error);
                     return;
                   }
-                  connect.createChannel(function(error, channel) {
+                  connect.createChannel(function (error, channel) {
                     if (error) {
                       console.log(error);
                       return;
@@ -390,9 +392,9 @@ export default new Vuex.Store({
                     channel.assertQueue(
                       queueName,
                       { durable: false, autoDelete: true },
-                      function(error) {
-                        let recevieMessage = function() {
-                          channel.get(queueName, {}, function(error, message) {
+                      function (error) {
+                        let recevieMessage = function () {
+                          channel.get(queueName, {}, function (error, message) {
                             if (error) {
                               console.log(error);
                             } else if (message) {
@@ -462,12 +464,12 @@ export default new Vuex.Store({
                   );
                   process.exit(1);
                 }
-                amqp.connect(url, function(error, connect) {
+                amqp.connect(url, function (error, connect) {
                   if (error) {
                     console.log(error);
                     return;
                   }
-                  connect.createChannel(function(error, channel) {
+                  connect.createChannel(function (error, channel) {
                     if (error) {
                       console.log(error);
                       return;
@@ -482,9 +484,9 @@ export default new Vuex.Store({
                     channel.assertQueue(
                       queueName,
                       { durable: false, autoDelete: true },
-                      function(error) {
-                        let recevieMessage = function() {
-                          channel.get(queueName, {}, function(error, message) {
+                      function (error) {
+                        let recevieMessage = function () {
+                          channel.get(queueName, {}, function (error, message) {
                             if (error) {
                               console.log(error);
                             } else if (message) {
@@ -539,11 +541,12 @@ export default new Vuex.Store({
     },
 
     addSite({ state }, siteInfo) {
+      var key = state.userInfo.agentPW;
       const info = {
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
         id: siteInfo.ID,
-        pw: siteInfo.PW,
+        pw: CryptoJS.AES.encrypt(siteInfo.PW, key).toString(),
         url: siteInfo.URL,
         name: siteInfo.name,
       };
@@ -570,11 +573,12 @@ export default new Vuex.Store({
       });
     },
     editSite({ state }, siteInfo) {
+      var key = state.userInfo.agentPW;
       const info = {
         agentID: state.userInfo.agentID,
         jwt: state.userInfo.JWT,
         id: siteInfo.ID,
-        pw: siteInfo.PW,
+        pw: CryptoJS.AES.encrypt(siteInfo.PW, key).toString(),
         url: siteInfo.URL,
         name: siteInfo.name,
       };
@@ -686,7 +690,7 @@ export default new Vuex.Store({
       };
       axios
         .post("https://54.180.153.254/checkIN//update/deviceEnable", data)
-        .then((result) => {});
+        .then((result) => { });
     },
   },
   modules: {},

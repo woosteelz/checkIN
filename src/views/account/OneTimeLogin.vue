@@ -3,7 +3,7 @@
     <v-row justify="center" align="center">
       <v-col cols="5">
         <ValidationObserver v-slot="{ invalid }">
-          <form>
+          <form @keyup.enter="OTL(otl)">
             <span class="text-center and white--text">
               <h2><strong>일회용 로그인</strong></h2>
               <br />

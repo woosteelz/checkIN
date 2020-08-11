@@ -181,7 +181,19 @@
                       </v-card-title>
                       <v-card-text class="pb-0">
                         <ValidationObserver v-slot="{ invalid }">
-                          <form class="pa-3">
+                          <form
+                            class="pa-3"
+                            @keyup.enter="
+                              editSite({
+                                name: editItem.name,
+                                URL: editItem.url,
+                                ID: editItem.id,
+                                PW: editItem.pw,
+                              }),
+                                (edit = false),
+                                resetForm()
+                            "
+                          >
                             <ValidationProvider
                               name="name"
                               rules="required"
@@ -282,9 +294,10 @@
                                     ID: editItem.id,
                                     PW: editItem.pw,
                                   }),
-                                    (edit = false)
+                                    (edit = false),
+                                    resetForm()
                                 "
-                                >등록</v-btn
+                                >수정</v-btn
                               >
                             </v-card-actions>
                           </form>
@@ -421,6 +434,9 @@ export default {
       var url = editItem.url;
       var name = editItem.name;
       store.dispatch("deleteSite", { id, pw, url, name });
+    },
+    resetForm() {
+      (this.ID = ""), (this.PW = ""), (this.URL = ""), (this.name = "");
     },
   },
 };

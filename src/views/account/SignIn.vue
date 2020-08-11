@@ -18,7 +18,7 @@
             <v-spacer></v-spacer>
           </v-toolbar>
           <div class="px-3 pt-3">
-            <form>
+            <form @keyup.enter="signIn({ agentID, agentPW })">
               <ValidationProvider
                 name="email"
                 rules="required|email"
