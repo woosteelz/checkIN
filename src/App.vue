@@ -37,7 +37,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <div id="header">
+    <div id="header" @resize="change()">
       <v-system-bar
         id="systembar"
         class="justify-space-between"
@@ -45,8 +45,11 @@
         dark
         height="48"
       >
-        <v-toolbar-title @click="$router.push({ name: 'SignIn' })">
-          <span class="ml-4">
+        <v-toolbar-title
+          id="title"
+          @click="$router.push({ name: 'SignIn' }).catch(() => {})"
+        >
+          <span class="mx-4">
             <strong>checkIN</strong>
           </span>
         </v-toolbar-title>
@@ -339,11 +342,23 @@ import Profile from "@/components/Profile";
 import amqp from "amqplib/callback_api";
 import store from "./store";
 
+const remote = require("electron").remote;
+const currentWindow = remote.getCurrentWindow();
+
 export default {
   components: {
     profile: Profile,
     ValidationProvider,
     ValidationObserver,
+  },
+  created() {
+    currentWindow.addListener("resize", () => {
+      if (currentWindow.isMaximized()) {
+        this.maximized = true;
+      } else {
+        this.maximized = false;
+      }
+    });
   },
   data: () => ({
     edit: false,
@@ -362,10 +377,16 @@ export default {
   }),
   computed: {
     ...mapState(["userInfo"]),
+    check_maximized() {
+      return (this.maximized = currentWindow.isMaximized());
+    },
   },
   watch: {
     logOut: () => {
       this.getState();
+    },
+    check_maximized(newVal) {
+      this.maximized = newVal;
     },
   },
   methods: {
@@ -408,19 +429,13 @@ export default {
       });
     },
     window_close() {
-      const remote = require("electron").remote;
-      const currentWindow = remote.getCurrentWindow();
       currentWindow.close();
     },
     window_minimize() {
-      const remote = require("electron").remote;
-      const currentWindow = remote.getCurrentWindow();
       currentWindow.minimize();
     },
     change() {
-      const remote = require("electron").remote;
-      const currentWindow = remote.getCurrentWindow();
-      if (this.maximized === false) {
+      if (!currentWindow.isMaximized()) {
         this.maximized = true;
         currentWindow.maximize();
       } else {
@@ -454,6 +469,13 @@ export default {
 }
 #systembar {
   -webkit-app-region: drag;
+}
+#title {
+  -webkit-app-region: no-drag;
+}
+#title:active {
+  color: grey;
+  opacity: 0.7;
 }
 #minus {
   -webkit-app-region: no-drag;
